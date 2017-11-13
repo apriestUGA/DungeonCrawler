@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	alert("Document Ready");
+});
+
+var monsterNameArray = ["Bat", "Spider", "Snake"]
+
+function Entity(entityName){
+	this.name = "";
+	if(entityName == null){
+		var numMonsterNames = monsterNameArray.length;
+		var indexOffset = 1 / numMonsterNames;
+		var index = 0;
+		var randomMonsterNum = Math.random();
+		while(randomMonsterNum > indexOffset){
+			randomMonsterNum = randomMonsterNum - indexOffset;
+			++index;
+		}
+		this.name=monsterNameArray[index];
+	}
+	else{
+		this.name="Character";
+	}
+	this.level = 5;
+	this.HP = 10;
+	this.attack = 2;
+	this.defence = 2;
+	this.printInfo = function(){
+		$("#enemyList").append("Name: " + this.name + " HP: " + this.HP + " Attack: " + this.attack + " Defence: " + this.defence + "<br>");
+	}
+}
+
+function createEvent(){
+	new EventEncounter(4);
+}
+
+function Floor(characterLevel){
+	var roomRowOne = [];
+	var roomRowTwo = [];
+	var roomRowThree = [];
+	var roomRowFour = [];
+	var roomRowFive = [];
+	var roomRowSix = [];
+	var roomRowSeven = [];
+	var roomRowEight = [];
+	var roomRowNine = [];
+	var roomRowTen = [];
+	var roomRowEleven = [];
+
+	var roomArray = [roomRowOne, roomRowTwo, roomRowThree, roomRowFour, roomRowFive, roomRowSix, roomRowSeven, roomRowEight, roomRowNine, roomRowTen, roomRowEleven];
+
+	//populate rooms
+
+}
+
+function Room(characterLevel){
+	this.event = new EventEncounter(characterLevel);
+}
+
+function EventEncounter(numMonsters){
+	alert("Creating new encounter event." + numMonsters)
+	var monsterArray = [];
+	for(var i=0; i<numMonsters; ++i){
+		monsterArray.push(new Entity(null));
+	}
+	for(var j=0; j<monsterArray.length; ++j){
+		monsterArray[j].printInfo();
+	}
+}
+</script>
+</head>
+<body>
+
+<div id="gameMainPage">
+	<table id="mainGameTable" style="margin:auto">
+	<tr>
+		<td id="screenLeftCell" style="width:300px; height:600px; border-style:solid">
+			<table id="screenLeftTable">
+				<tr>
+					<td id="screenLeftTopCell" style="width:300px; height:100px; border-style:solid">
+						<p>
+							This is for Game title
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenLeftCenterCell" style="width:300px; height:300px; border-style:solid">
+						<p id="enemyList">
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenLeftBottomCell" style="width:300px; height:200px; border-style:solid">
+						<p>
+							This is for load, save, etc
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td id="screenCenter" style="width:600px; height:600px; border-style:solid">
+			<table id="screenCenterTable">
+				<tr>
+					<td id="screenCenterTopCell" style="width:600px; height:450px; border-style:solid">
+						<p id="eventText" style="width:600px; height:450px"></p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenCenterBottomCell" style="width:600px; height:150px; border-style:solid">
+						<table id="buttonTable" style="margin:auto">
+							<tr id="buttonRowOne">
+								<td id="buttonRowOneCellOne">
+									<button id="buttonR1C1" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Create Event
+									</button>
+								</td>
+								<td id="buttonRowOneCellTwo">
+									<button id="buttonR1C2" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowOneCellThree">
+									<button id="buttonR1C3" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowOneCellFour">
+									<button id="buttonR1C4" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowOneCellFive">
+									<button id="buttonR1C5" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+							</tr>
+							<tr id="buttonRowTwo">
+								<td id="buttoneRowTwoCellOne">
+									<button id="buttonR2C1" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellTwo">
+									<button id="buttonR2C2" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellThree">
+									<button id="buttonR2C3" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellFour">
+									<button id="buttonR2C4" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellFive">
+									<button id="buttonR2C5" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+							</tr>
+							<tr id="buttonRowThree">
+								<td id="buttonRowThreeCellOne">
+									<button id="buttonR3C1" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellTwo">
+									<button id="buttonR3C2" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellThree">
+									<button id="buttonR3C3" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellFour">
+									<button id="buttonR3C4" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellFive">
+									<button id="buttonR3C5" style="border:ridge; background-color:#80aaff; border-radius:12px; padding-left:40px; padding-right:40px; padding-top:5px; padding-bottom:5px">
+										Text
+									</button>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td id="screenRight" style="width:300px; height:600px; border-style:solid">
+			<table id="screenLeftTable">
+				<tr>
+					<td id="screenRightTopCell" style="width:300px; height:150px; border-style:solid">
+						<p>This is for minimap</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenRightCenterCell" style="width:300px; height:300px; border-style:solid">
+						<p>This is for character stats</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenRightBottomCell" style="width:300px; height:150px; border-style:solid">
+						<p>This is for anything</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
+</div>
+<script>
+document.getElementById("buttonR1C1").onclick = function() {createEvent()};
+</script>
+
+</body>
+</html>
