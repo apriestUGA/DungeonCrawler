@@ -140,7 +140,11 @@
 				</tr>
 				<tr>
 					<td id="screenRightCenterCell" style="width:300px; height:300px; border-style:solid">
-						<p>This is for character stats</p>
+						<p>This is for character stats</br></br>
+							Name: <div class="charName"></div></br>
+							Level: <div class="charLevel"></div></br>
+							XP: <div class="charXP"></div></br>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -155,6 +159,9 @@
 </div>
 <script>
 $(document).ready(function(){
+	$('.charName').html(characterName.toString());
+	$('.charLevel').html(characterLevel);
+	$('.charXP').html(characterXP);
 	//If anything in this script is not correct, the document ready alert will not appear
 	alert("Document Ready");
 });
