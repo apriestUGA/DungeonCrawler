@@ -174,7 +174,9 @@ var currentRoom = null;
 var currentEvent = null;
 
 //Entity constructor
-function Entity(entityName){
+function Entity(entityName, entityLevel){
+	var name;
+	var level;
 	this.name = "";
 	if(entityName == null){
 		var numMonsterNames = monsterNameArray.length;
@@ -190,14 +192,14 @@ function Entity(entityName){
 	else{
 		this.name=entityName;
 	}
-	this.level = 5;
-	this.HP = 10;
-	this.attack = 2;
-	this.defence = 2;
+	this.level = entityLevel - 1 + Math.round(2 * Math.random());
+	this.HP = this.level + Math.round(.5 * this.level) + Math.round(2 * this.level * Math.random());
+	this.attack = this.level + Math.round(.25 * this.level) + Math.round(4 * this.level * Math.random());
+	this.defence = this.level + Math.round(.25 * this.level) + Math.round(4 * this.level * Math.random());
 	
 	//print entity info (This will need an if/else for character stat location)
 	this.printInfo = function(){
-		$("#enemyList").append("Name: " + this.name + " HP: " + this.HP + " Attack: " + this.attack + " Defence: " + this.defence + "<br>");
+		$("#enemyList").append("Name: " + this.name + "Level: " + this.level + " HP: " + this.HP + " Attack: " + this.attack + " Defence: " + this.defence + "<br>");
 	}
 }
 
@@ -208,19 +210,8 @@ function createEvent(){
 
 //This is the floor constructor
 function Floor(characterLevel){
-	var roomRowOne = [];
-	var roomRowTwo = [];
-	var roomRowThree = [];
-	var roomRowFour = [];
-	var roomRowFive = [];
-	var roomRowSix = [];
-	var roomRowSeven = [];
-	var roomRowEight = [];
-	var roomRowNine = [];
-	var roomRowTen = [];
-	var roomRowEleven = [];
 
-	var roomArray = [roomRowOne, roomRowTwo, roomRowThree, roomRowFour, roomRowFive, roomRowSix, roomRowSeven, roomRowEight, roomRowNine, roomRowTen, roomRowEleven];
+	var roomArray = [[], [], [], [], [], [], [], [], [], [], []];
 
 	//populate rooms
 
@@ -236,7 +227,7 @@ function EventEncounter(numMonsters){
 	alert("Creating new encounter event." + numMonsters)
 	var monsterArray = [];
 	for(var i=0; i<numMonsters; ++i){
-		monsterArray.push(new Entity(null));
+		monsterArray.push(new Entity(null, characterLevel));
 	}
 	for(var j=0; j<monsterArray.length; ++j){
 		monsterArray[j].printInfo();
