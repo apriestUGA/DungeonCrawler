@@ -140,7 +140,7 @@
 				</tr>
 				<tr>
 					<td id="screenRightCenterCell" style="width:300px; height:300px; border-style:solid">
-						<p>This is for character stats</br></br>
+						<p>Character Statistics:</br></br>
 							Name: <div class="charName"></div></br>
 							Level: <div class="charLevel"></div></br>
 							XP: <div class="charXP"></div></br>
@@ -159,9 +159,7 @@
 </div>
 <script>
 $(document).ready(function(){
-	$('.charName').html(characterName.toString());
-	$('.charLevel').html(characterLevel);
-	$('.charXP').html(characterXP);
+	updateCharacterStats();
 	//If anything in this script is not correct, the document ready alert will not appear
 	alert("Document Ready");
 });
@@ -180,6 +178,12 @@ var characterY = 6;
 var currentRoom = null;
 var currentEvent = null;
 
+//updates character stats on the interface
+function updateCharacterStats(){
+	$('.charName').html(characterName.toString());
+	$('.charLevel').html(characterLevel);
+	$('.charXP').html(characterXP);	
+}
 //Entity constructor
 function Entity(entityName, entityLevel){
 	var name;
