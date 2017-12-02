@@ -136,6 +136,43 @@
 				<tr>
 					<td id="screenRightTopCell" style="width:300px; height:150px; border-style:solid">
 						<p>This is for minimap</p>
+						<table id=minimapTable>
+						<script>
+
+						var jsMinimapTable = document.getElementById("minimapTable");
+						
+						for(var i = 0; i < 21; ++i){
+							var tr = jsMinimapTable.insertRow(i);
+							for(var j = 0; j < 21; ++j){
+								var td = tr.insertCell(j);
+								td.style.border="solid";
+								td.id = "" + i + "." + j;
+								var img = document.createElement("img");
+								if(i%2 == 0 && j%2 == 0){
+									td.style.height = "9px";
+									td.style.width = "11px";
+								}
+								else if(i%2 == 1 && j%2 ==0){
+									td.style.height = "3px";
+									td.style.width = "11px";
+								}
+								else if(i%2 == 0 && j%2 == 1){
+									td.style.height = "9px";
+									td.style.width = "3px";
+								}
+								else if(i%2 == 1 && j%2 == 1){
+									td.style.height = "3px";
+									td.style.width = "3px";
+								}
+								td.appendChild(img);
+							}
+							
+						}
+						document.getElementById("minimapTable").style.emptyCells = "show";
+						document.getElementById("minimapTable").style.borderSpacing = "0px";
+						document.getElementById("0.0").style.backgroundColor = "red";			
+						</script>
+						</table>
 					</td>
 				</tr>
 				<tr>
@@ -221,8 +258,6 @@ function createEvent(){
 
 //This is the floor constructor
 function Floor(characterLevel){
-
-	var roomArray = [[], [], [], [], [], [], [], [], [], [], []];
 
 	//populate rooms
 
