@@ -136,7 +136,7 @@
 			<table id="screenRightTable">
 				<tr>
 					<td id="screenRightTopCell" style="width:300px; height:150px; border-style:solid">
-						<p>This is for minimap</p>
+					<center>
 						<table id=minimapTable>
 						<script>
 
@@ -146,9 +146,9 @@
 							var tr = jsMinimapTable.insertRow(i);
 							for(var j = 0; j < 21; ++j){
 								var td = tr.insertCell(j);
-								td.style.border="solid";
 								td.id = "" + i + "." + j;
 								var img = document.createElement("img");
+								img.id = "img"+i+"."+j;
 								if(i%2 == 0 && j%2 == 0){
 									td.style.height = "9px";
 									td.style.width = "11px";
@@ -171,9 +171,10 @@
 						}
 						document.getElementById("minimapTable").style.emptyCells = "show";
 						document.getElementById("minimapTable").style.borderSpacing = "0px";
-						document.getElementById("0.0").style.backgroundColor = "red";			
+									
 						</script>
 						</table>
+					</center>
 					</td>
 				</tr>
 				<tr>
@@ -198,7 +199,7 @@
 <script>
 $(document).ready(function(){
 	updateCharacterStats();
-	updateMap();
+	updateMiniMap();
 	moveControl();
 	//If anything in this script is not correct, the document ready alert will not appear
 	alert("Document Ready");
@@ -224,18 +225,41 @@ function updateCharacterStats(){
 	$('.charLevel').html(characterLevel);
 	$('.charXP').html(characterXP);	
 }
-function updateMap() {
-	$('#screenRightTopCell').append("<table>");
-	for (i = 0; i < 21; i++) {
-		$('#screenRightTopCell').append("<tr>");
-		for(j = 0; j < 21; j++) {
-			$('#screenRightTopCell').append("<td id="+i+"."+j+" style=\"border: 1px solid black \">");
-				$('#screenRightTopCell td').append(" ")
-			$('#screenRightTopCell').append("</td>")
+function updateMiniMap() { //update minimap based on the room array
+	for(var i = 0; i < 11; ++i){
+		for(var j = 0; j < 11; ++j){
+			if(!(map[i][j].type == "empty")){//Room exists
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
+				if(i < 10 && !(map[i+1][j] == "empty")){//if there is a room south
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png"
+				}
+				else{
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png"
+				}
+				if( i > 0 && !(map[i-1][j] == "empty")){//if there is a room north
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png"
+				}
+				else{
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png"
+				}
+				if(j < 10 && !(map[i][j+1] == "empty")){//if there is a room east
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png"
+				}
+				else{
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png"
+				}
+				if(j > 0 && !(map[i][j-1] == "empty")){//if there is a room west
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png"
+				}
+				else{
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png"
+				}
+			}
+			else{
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
+			}
 		}
-		$('#screenRightTopCell').append("</tr>");
 	}
-	$('#screenRightTopCell').append("</table>")
 }
 //Entity constructor
 function Entity(entityName, entityLevel){
@@ -273,6 +297,7 @@ function createEvent(){
 	$('#buttonR1C1').text("Attack");
 	$('#buttonR1C2').text("Inventory");
 	$('#buttonR1C3').text("Retreat");
+	
 }
 
 //This is a class to control movement
