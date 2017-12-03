@@ -136,45 +136,8 @@
 			<table id="screenRightTable">
 				<tr>
 					<td id="screenRightTopCell" style="width:300px; height:150px; border-style:solid">
-					<center>
-						<table id=minimapTable>
-						<script>
-
-						var jsMinimapTable = document.getElementById("minimapTable");
-						
-						for(var i = 0; i < 21; ++i){
-							var tr = jsMinimapTable.insertRow(i);
-							for(var j = 0; j < 21; ++j){
-								var td = tr.insertCell(j);
-								td.id = "" + i + "." + j;
-								var img = document.createElement("img");
-								img.id = "img"+i+"."+j;
-								if(i%2 == 0 && j%2 == 0){
-									td.style.height = "9px";
-									td.style.width = "11px";
-								}
-								else if(i%2 == 1 && j%2 ==0){
-									td.style.height = "3px";
-									td.style.width = "11px";
-								}
-								else if(i%2 == 0 && j%2 == 1){
-									td.style.height = "9px";
-									td.style.width = "3px";
-								}
-								else if(i%2 == 1 && j%2 == 1){
-									td.style.height = "3px";
-									td.style.width = "3px";
-								}
-								td.appendChild(img);
-							}
-							
-						}
-						document.getElementById("minimapTable").style.emptyCells = "show";
-						document.getElementById("minimapTable").style.borderSpacing = "0px";
-									
-						</script>
-						</table>
-					</center>
+					<div id="miniMapDiv">
+					</div>
 					</td>
 				</tr>
 				<tr>
@@ -219,6 +182,7 @@ var characterDefence = 1;//set equation based on characterLevel
 var characterMaxHP = 10;
 var characterX = 6;
 var characterY = 6;
+var currentFloor = new Floor();
 var currentRoom = null;
 var currentEvent = null;
 
@@ -232,27 +196,27 @@ function updateCharacterStats(){
 function updateMiniMap() { //update minimap based on the room array
 	for(var i = 0; i < 11; ++i){
 		for(var j = 0; j < 11; ++j){
-			if(!(map[i][j].type == "empty")){//Room exists
+			if(!(currentFloor['map[i][j]'] == null)){//Room exists
 				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
-				if(i < 10 && !(map[i+1][j] == "empty")){//if there is a room south
+				if(i < 10 && !(currentFloor['map[i+1][j]'] == null)){//if there is a room south
 					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
 				}
 				else{
 					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
 				}
-				if( i > 0 && !(map[i-1][j] == "empty")){//if there is a room north
+				if( i > 0 && !(currentFloor['map[i-1][j]'] == null)){//if there is a room north
 					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
 				}
 				else{
 					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
 				}
-				if(j < 10 && !(map[i][j+1] == "empty")){//if there is a room east
+				if(j < 10 && !(currentFloor['map[i][j+1]'] == null)){//if there is a room east
 					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
 				}
 				else{
 					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
 				}
-				if(j > 0 && !(map[i][j-1] == "empty")){//if there is a room west
+				if(j > 0 && !(currentFloor['map[i][j-1]'] == null)){//if there is a room west
 					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
 				}
 				else{
@@ -261,6 +225,19 @@ function updateMiniMap() { //update minimap based on the room array
 			}
 			else{
 				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
+				if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+
 			}
 		}
 	}
@@ -326,9 +303,17 @@ function moveControl() {
 
 //This is the floor constructor
 function Floor(characterLevel){
+	var map = [];
+	for(var i = 0; i < 11; ++i){
+		var row = [];
+		for(var j = 0; j < 11; ++j){
+			row[j] = null;
+		}
+		map[i] = row;
+	}
 
-	//populate rooms
-
+	var numberRooms = 10;
+	
 }
 
 //This is the room constructor
@@ -337,8 +322,8 @@ function Room(characterLevel){
 }
 
 //This is the encounter event constructor
-function EventEncounter(numMonsters){
-	alert("Creating new encounter event." + numMonsters);
+function EventEncounter(characterLevel){
+	var numMonsters = 4;
 	var monsterArray = [];
 	for(var i=0; i<numMonsters; ++i){
 		monsterArray.push(new Entity(null, characterLevel));
@@ -348,8 +333,43 @@ function EventEncounter(numMonsters){
 	}
 }
 
-document.getElementById("buttonR1C1").onclick = function() {createEvent()};
-</script>
+//Set up minimap area
+var jsMiniMapDiv = document.getElementById("miniMapDiv");
+jsMiniMapDiv.style.fontSize = "0";
+for(var i = 0; i < 21; ++i){
+	var newDiv = document.createElement('div');
+	newDiv.style.display = "inline-block";
+	newDiv.style.fontSize = "0";
+	for(var j = 0; j < 21; ++j){
+		var newSpan = document.createElement('span');
+		newSpan.id = ""+i+"."+j;
+		newSpan.style.display = "inline-block";
+		newSpan.style.fontSize = "0";
+		var img = document.createElement('img');
+		img.id="img"+i+"."+j;
+		if(i%2 == 0 && j%2 == 0){
+			newSpan.style.height = "9px";
+			newSpan.style.width = "11px";
+		}
+		else if(i%2 == 1 && j%2 ==0){
+			newSpan.style.height = "3px";
+			newSpan.style.width = "11px";
+		}
+		else if(i%2 == 0 && j%2 == 1){
+			newSpan.style.height = "9px";
+			newSpan.style.width = "3px";
+		}
+		else if(i%2 == 1 && j%2 == 1){
+			newSpan.style.height = "3px";
+			newSpan.style.width = "3px";
+			newSpan.style.backgroundColor = "#333333"
+		}
+		newSpan.appendChild(img);
+		newDiv.appendChild(newSpan);
+	}
+	jsMiniMapDiv.appendChild(newDiv);
+}
 
+</script>
 </body>
 </html>
