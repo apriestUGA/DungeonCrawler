@@ -179,10 +179,12 @@
 				</tr>
 				<tr>
 					<td id="screenRightCenterCell" style="width:300px; height:300px; border-style:solid">
-						<p>Character Statistics:</br></br>
-							Name: <div class="charName"></div></br>
-							Level: <div class="charLevel"></div></br>
-							XP: <div class="charXP"></div></br>
+						<p>Character Statistics:</br>
+							Name: <span class="charName"></span><br>
+							Level: <span class="charLevel"></span><br>
+							Health: <span class="charHP"></span><br>
+							XP: <span class="charXP"></span><br>
+
 						</p>
 					</td>
 				</tr>
@@ -211,9 +213,10 @@ var monsterNameArray = ["Bat", "Spider", "Snake"]
 var characterName = "testCharacter";
 var characterLevel = 1;
 var characterXP = 0;
-var characterHP = -1;//set equation based on characterLevel
-var characterAttack = -1;//set equation based on characterLevel
-var characterDefence = -1;//set equation based on characterLevel
+var characterHP = 1;//set equation based on characterLevel
+var characterAttack = 1;//set equation based on characterLevel
+var characterDefence = 1;//set equation based on characterLevel
+var characterMaxHP = 10;
 var characterX = 6;
 var characterY = 6;
 var currentRoom = null;
@@ -223,7 +226,8 @@ var currentEvent = null;
 function updateCharacterStats(){
 	$('.charName').html(characterName.toString());
 	$('.charLevel').html(characterLevel);
-	$('.charXP').html(characterXP);	
+	$('.charXP').html(characterXP);
+	$('.charHP').html(characterHP);
 }
 function updateMiniMap() { //update minimap based on the room array
 	for(var i = 0; i < 11; ++i){
@@ -231,28 +235,28 @@ function updateMiniMap() { //update minimap based on the room array
 			if(!(map[i][j].type == "empty")){//Room exists
 				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
 				if(i < 10 && !(map[i+1][j] == "empty")){//if there is a room south
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png"
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
 				}
 				else{
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png"
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
 				}
 				if( i > 0 && !(map[i-1][j] == "empty")){//if there is a room north
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png"
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
 				}
 				else{
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png"
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
 				}
 				if(j < 10 && !(map[i][j+1] == "empty")){//if there is a room east
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png"
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
 				}
 				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png"
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
 				}
 				if(j > 0 && !(map[i][j-1] == "empty")){//if there is a room west
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png"
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
 				}
 				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png"
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
 				}
 			}
 			else{
@@ -334,7 +338,7 @@ function Room(characterLevel){
 
 //This is the encounter event constructor
 function EventEncounter(numMonsters){
-	alert("Creating new encounter event." + numMonsters)
+	alert("Creating new encounter event." + numMonsters);
 	var monsterArray = [];
 	for(var i=0; i<numMonsters; ++i){
 		monsterArray.push(new Entity(null, characterLevel));
