@@ -207,6 +207,8 @@ $(document).ready(function(){
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"]
 
+var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2']
+
 var characterName = "testCharacter";
 var characterLevel = 1;
 var characterXP = 0;
@@ -273,6 +275,14 @@ function createEvent(){
 	$('#buttonR1C1').text("Attack");
 	$('#buttonR1C2').text("Inventory");
 	$('#buttonR1C3').text("Retreat");
+
+	$('#buttonR1C4').hide();
+	$('#buttonR2C1').hide();
+	$('#buttonR2C2').hide();
+	$('#buttonR2C3').hide();
+	$('#buttonR2C4').hide();
+	$('#buttonR3C2').hide();
+	$('#buttonR3C4').hide();
 }
 
 //This is a class to control movement
@@ -283,6 +293,10 @@ function moveControl() {
 	$('#buttonR3C2').text("Down");
 	$('#buttonR2C1').text("Left");
 	$('#buttonR2C3').text("Right");
+
+	for (i = 0; i < moveButtons.length; i++) {
+		$(moveButtons[i]).show();
+	}
 
 	$('#buttonR1C3').text("Inventory");
 	$('#buttonR2C2').text("Interact");
@@ -319,7 +333,9 @@ function EventEncounter(numMonsters){
 	}
 }
 
+// Event listeners
 document.getElementById("buttonR1C1").onclick = function() {createEvent()};
+document.getElementById('buttonR1C3').onclick = function() {moveControl()};
 </script>
 
 </body>
