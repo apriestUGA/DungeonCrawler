@@ -134,6 +134,7 @@ $(document).ready(function(){
 	updateCharacterStats();
 	generateNewFloor(1, map);
 	updateMiniMap(map);
+	updateCharacterLocation();
 	moveControl();
 	//If anything in this script is not correct, the document ready alert will not appear
 	alert("Document Ready");
@@ -153,6 +154,8 @@ var characterDefence = 1;//set equation based on characterLevel
 var characterMaxHP = 10;
 var characterX = 5;
 var characterY = 5;
+var previousCharacterX = 5;
+var previousCharacterY= 5;
 var currentFloor = null;
 var currentRoom = null;
 var currentEvent = null;
@@ -218,6 +221,12 @@ function updateMiniMap( map ) { //update minimap based on the room array
 		}
 	}
 }
+
+function updateCharacterLocation(){
+	document.getElementById("img" + (2*previousCharacterX) + "." + (2*previousCharacterY)).src = "dungeonRoom.png";
+	document.getElementById("img" + (2*characterX) + "." + (2*characterY)).src = "dungeonOccupied.png";
+}
+
 //Entity constructor
 function Entity(entityName, entityLevel){
 	var name;
@@ -282,7 +291,6 @@ function moveControl() {
 	document.getElementById("buttonR1C2").onclick = function() {
 		if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
 			moveUp();
-			alert("You moved to " + characterX + "," + characterY);
 		} else
 			alert("You cannot move up");
 	};
@@ -291,7 +299,6 @@ function moveControl() {
 	document.getElementById("buttonR3C2").onclick = function() {
 		if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
 			moveDown();
-			alert("You moved to " + characterX + "," + characterY);
 		} else
 			alert("You cannot move down");
 	};
@@ -300,7 +307,6 @@ function moveControl() {
 	document.getElementById("buttonR2C3").onclick = function() {
 		if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
 			moveRight();
-			alert("You moved to " + characterX + "," + characterY);
 		} else
 			alert("You cannot move right");
 	};	
@@ -309,7 +315,6 @@ function moveControl() {
 	document.getElementById("buttonR2C1").onclick = function() {
 		if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
 			moveLeft();
-			alert("You moved to " + characterX + "," + characterY);
 		} else
 			alert("You cannot move left");
 	};	
@@ -325,25 +330,37 @@ function moveControl() {
 function moveUp() {
 	currentRoom = map[characterX - 1][characterY];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterX--;
+	updateCharacterLocation();
 }
 
 function moveDown() {
 	currentRoom = map[characterX + 1][characterY];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterX++;
+	updateCharacterLocation();
 }
 
 function moveRight() {
 	currentRoom = map[characterX][characterY + 1];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterY++;
+	updateCharacterLocation();
 }
 
 function moveLeft() {
 	currentRoom = map[characterX][characterY - 1];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterY--;
+	updateCharacterLocation();
 }
 
 //This is the floor constructor
@@ -358,7 +375,7 @@ function Floor(characterLevel, map)
   }
 }//for loop 2d array
 
-  var numberRooms = 10;
+  var numberRooms = 20;
   map[5][5] = new Room(characterLevel, "noEvent"); //Start room
   var possibleRoomLocations = [[4,5], [6,5], [5,4], [5,6]]; //Possible locations from start room
   var nextRoom = 0;
