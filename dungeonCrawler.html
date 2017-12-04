@@ -142,8 +142,9 @@ $(document).ready(function(){
 
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"];
-
+// Up, Down, Left, Right
 var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'buttonR1C3', 'buttonR2C2'];
+// Attack, Defend, Run
 var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
 var allButtons = [moveButtons, encounterButtons];
 
@@ -259,21 +260,17 @@ function clearAllListeners() {
 function moveControl() {
 	// Listeners cleared
 	clearAllListeners();
-
-	$('#buttonR1C1').text("Create Event");
-	$('#buttonR1C2').text("Up");
-	$('#buttonR3C2').text("Down");
-	$('#buttonR2C1').text("Left");
-	$('#buttonR2C3').text("Right");
+	$('#' + moveButtons[0]).text("Up");
+	$('#' + moveButtons[1]).text("Down");
+	$('#' + moveButtons[2]).text("Left");
+	$('#' + moveButtons[3]).text("Right");
 
 	for (i = 0; i < moveButtons.length; i++) {
 		$('#' + moveButtons[i]).show();
 	}
 
-	document.getElementById("buttonR1C1").onclick = function() {createEvent()};
-
 	// Up Movement
-	document.getElementById("buttonR1C2").onclick = function() {
+	document.getElementById(moveButtons[0]).onclick = function() {
 		if (characterX != 0 && (currentFloor['map[characterX - 1][characterY]'] != null)) {
 			moveUp();
 		} else
@@ -281,33 +278,35 @@ function moveControl() {
 	};
 
 	// Down Movement
-	document.getElementById("buttonR3C2").onclick = function() {
+	document.getElementById(moveButtons[1]).onclick = function() {
 		if (characterX != 10 && (currentFloor['map[characterX + 1][characterY]'] != null)) {
 			moveDown();
 		} else
 			alert("You cannot move down");
 	};
 
+	// Left Movement
+	document.getElementById(moveButtons[2]).onclick = function() {
+		if (characterY != 0 && (currentFloor['map[characterX][characterY - 1]'] != null)) {
+			moveRight();
+		} else
+			alert("You cannot move left");
+	};
+	
 	// Right Movement
-	document.getElementById("buttonR2C3").onclick = function() {
+	document.getElementById(moveButtons[3]).onclick = function() {
 		if (characterY != 10 && (currentFloor['map[characterX][characterY + 1]'] != null)) {
 			moveRight();
 		} else
 			alert("You cannot move right");
 	};	
 
-	// Left Movement
-	document.getElementById("buttonR2C1").onclick = function() {
-		if (characterY != 0 && (currentFloor['map[characterX][characterY - 1]'] != null)) {
-			moveRight();
-		} else
-			alert("You cannot move left");
-	};	
 
 	$('#buttonR1C3').text("Inventory");
 	$('#buttonR2C2').text("Interact");
 
 	// Hiding buttons
+	$('#buttonR1C1').hide();
 	$('#buttonR3C1').hide();
 	$('#buttonR3C3').hide();
 }
@@ -408,6 +407,8 @@ function EventEncounter(characterLevel){
 	function setUpEvent() {
 		clearAllListeners();
 		// set Attack Defense Retreat listeners
+		encounterButtons[0] // Attack
+		encounterButtons[1]
 	}
 }
 
