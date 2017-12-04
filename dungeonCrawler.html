@@ -154,8 +154,8 @@ var characterHP = 1;//set equation based on characterLevel
 var characterAttack = 1;//set equation based on characterLevel
 var characterDefence = 1;//set equation based on characterLevel
 var characterMaxHP = 10;
-var characterX = 6;
-var characterY = 6;
+var characterX = 5;
+var characterY = 5;
 var currentFloor = new Floor();
 var currentRoom = null;
 var currentEvent = null;
@@ -361,7 +361,36 @@ function StairEvent(){
 
 	function setUpEvent(){
 		//buttons
+		$('#buttonR1C1').text("Create Event");
+		//Movement
+		$('#buttonR1C2').text("Up");
+		$('#buttonR3C2').text("Down");
+		$('#buttonR2C1').text("Left");
+		$('#buttonR2C3').text("Right");
+
+		for (i = 0; i < moveButtons.length; i++) {
+			$(moveButtons[i]).show();
+		}
+
+		$('#buttonR1C3').text("Inventory");
+		$('#buttonR2C2').text("Interact");
+
 		//event listeners
+
+		//Move up
+		document.getElementById("buttonR1C2").onclick = function(){
+			if(characterX != 0 && currentFloor['map[characterX - 1][characterY]'] != null){
+				moveUp();
+			}
+			else{
+				alert("you can not move up");
+			}
+		}
+
+		//Floor movement
+		document.getElementById("buttonR2C2").onclick = function(){
+			//generate new floor, move character to 5,5, set health = max health
+		}
 	}
 }
 
