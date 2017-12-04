@@ -193,6 +193,8 @@ function updateCharacterStats(){
 	$('.charXP').html(characterXP);
 	$('.charHP').html(characterHP);
 }
+
+
 function updateMiniMap() { //update minimap based on the room array
 	for(var i = 0; i < 11; ++i){
 		for(var j = 0; j < 11; ++j){
@@ -272,9 +274,8 @@ function Entity(entityName, entityLevel){
 	}
 }
 
-//This is a class to create an event
-function createEvent(){
-	new EventEncounter(4);
+//This sets up encounter event control
+function encoutnerEventControl(){
 	$('#buttonR1C1').text("Attack");
 	$('#buttonR1C2').text("Inventory");
 	$('#buttonR1C3').text("Retreat");
@@ -313,12 +314,32 @@ function Floor(characterLevel){
 	}
 
 	var numberRooms = 10;
-	
+	map[6][6] = new Room(characterLevel, "noEvent"); //Start room
+	var possibleRoomLocations = [[5,6], [7,6], [6,5], [6,7]]; //Possible locations from start room
+	for(var i = 0; i < numberRooms-1; ++i){ //minus 1 because the last room generated is the stair room
+		//select random location from possibleRoomLocations, this is an array of 2 length with index 0 being x and index 1 being y
+
+		//check if selected location is already occupied, if so, subtract 1 from i, otherwise
+			//generate a new room, add the location up, down, left, and right from it to the possibleRoomLocations
+	}
+	//generate stair room, select location from possibleRoomLocations then set it to new Room(characterLevel, "stair");
 }
 
 //This is the room constructor
-function Room(characterLevel){
-	this.event = new EventEncounter(characterLevel);
+function Room(characterLevel, generateEventType){
+	if(generateEventType == "noEvent"){
+		this.event = null;
+	}
+	else if(generateEventType == "stair"){
+		this.event = new StairEvent();
+	}
+	else{
+		this.event = new EventEncounter(characterLevel);
+	}
+}
+
+function StairEvent(){
+//Allows for movement and interaction, if interaction, move to new floor (set character location, generate new floor, set characterHP to maxHP)
 }
 
 //This is the encounter event constructor
@@ -328,6 +349,12 @@ function EventEncounter(characterLevel){
 	for(var i=0; i<numMonsters; ++i){
 		monsterArray.push(new Entity(null, characterLevel));
 	}
+	updateMonsterInfo(monsterArray);
+}
+
+//update monster info
+function updateMonsterInfo(monsterArray){
+	$("#enemyList").html("");
 	for(var j=0; j<monsterArray.length; ++j){
 		monsterArray[j].printInfo();
 	}
