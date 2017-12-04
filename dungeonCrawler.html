@@ -48,7 +48,7 @@
 							<tr id="buttonRowOne">
 								<td id="buttonRowOneCellOne">
 									<button id="buttonR1C1">
-										Create Event
+										Text
 									</button>
 								</td>
 								<td id="buttonRowOneCellTwo">
@@ -142,11 +142,12 @@ $(document).ready(function(){
 
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"];
-// Up, Down, Left, Right
+// Up, Down, Left, Right, Inventory, Interact
 var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'buttonR1C3', 'buttonR2C2'];
 // Attack, Defend, Run
 var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
-var allButtons = [moveButtons, encounterButtons];
+var extraButtons = ['buttonR3C1', 'buttonR3C3'];
+var allButtons = [moveButtons, encounterButtons, extraButtons];
 
 var characterName = "testCharacter";
 var characterLevel = 1;
@@ -222,6 +223,7 @@ function Entity(entityName, entityLevel){
 	var name;
 	var level;
 	this.name = "";
+	var inventory;
 	if(entityName == null){
 		var numMonsterNames = monsterNameArray.length;
 		var indexOffset = 1 / numMonsterNames;
@@ -252,6 +254,7 @@ function clearAllListeners() {
 		for (var j = 0; j < allButtons[i].length; j++) {
 			var btn = allButtons[i][j];
 			document.getElementById(btn).onclick = function(){};
+			$('#' + btn).hide();
 		}
 	}
 }
@@ -260,14 +263,17 @@ function clearAllListeners() {
 function moveControl() {
 	// Listeners cleared
 	clearAllListeners();
-	$('#' + moveButtons[0]).text("Up");
-	$('#' + moveButtons[1]).text("Down");
-	$('#' + moveButtons[2]).text("Left");
-	$('#' + moveButtons[3]).text("Right");
 
 	for (i = 0; i < moveButtons.length; i++) {
 		$('#' + moveButtons[i]).show();
 	}
+
+	$('#' + moveButtons[0]).text("Up");
+	$('#' + moveButtons[1]).text("Down");
+	$('#' + moveButtons[2]).text("Left");
+	$('#' + moveButtons[3]).text("Right");
+	$('#' + moveButtons[4]).text("Inventory");
+	$('#' + moveButtons[5]).text("Interact");
 
 	// Up Movement
 	document.getElementById(moveButtons[0]).onclick = function() {
@@ -299,16 +305,17 @@ function moveControl() {
 			moveRight();
 		} else
 			alert("You cannot move right");
-	};	
+	};
 
+	// Inventory
+	document.getElementById(moveButtons[4]).onclick = function() {
+		alert("Here's your inventory! (empty)");
+	};
 
-	$('#buttonR1C3').text("Inventory");
-	$('#buttonR2C2').text("Interact");
-
-	// Hiding buttons
-	$('#buttonR1C1').hide();
-	$('#buttonR3C1').hide();
-	$('#buttonR3C3').hide();
+	// Interact
+	document.getElementById(moveButtons[5]).onclick = function() {
+		alert("It's a rock");
+	};
 }
 
 function moveUp() {
@@ -359,20 +366,18 @@ function StairEvent(){
 	//Allows for movement and interaction, if interaction, move to new floor (set character location, generate new floor, set characterHP to maxHP)
 
 	function setUpEvent(){
-		//buttons
-		$('#buttonR1C1').text("Create Event");
-		//Movement
-		$('#buttonR1C2').text("Up");
-		$('#buttonR3C2').text("Down");
-		$('#buttonR2C1').text("Left");
-		$('#buttonR2C3').text("Right");
+		/// Listeners cleared
+		clearAllListeners();
+		$('#' + moveButtons[0]).text("Up");
+		$('#' + moveButtons[1]).text("Down");
+		$('#' + moveButtons[2]).text("Left");
+		$('#' + moveButtons[3]).text("Right");
+		$('#' + moveButtons[4]).text("Inventory");
+		$('#' + moveButtons[5]).text("Interact");
 
 		for (i = 0; i < moveButtons.length; i++) {
-			$(moveButtons[i]).show();
+			$('#' + moveButtons[i]).show();
 		}
-
-		$('#buttonR1C3').text("Inventory");
-		$('#buttonR2C2').text("Interact");
 
 		//event listeners
 
@@ -382,7 +387,7 @@ function StairEvent(){
 				moveUp();
 			}
 			else{
-				alert("you can not move up");
+				alert("You cannot move up");
 			}
 		}
 
