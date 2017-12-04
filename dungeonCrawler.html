@@ -143,7 +143,9 @@ $(document).ready(function(){
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"];
 
-var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2'];
+var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'buttonR1C3', 'buttonR2C2'];
+var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
+var allButtons = [moveButtons, encounterButtons];
 
 var characterName = "testCharacter";
 var characterLevel = 1;
@@ -244,25 +246,20 @@ function Entity(entityName, entityLevel){
 	}
 }
 
-//This is a class to create an event
-function createEvent(){
-	new EventEncounter(4);
-	$('#buttonR1C1').text("Attack");
-	$('#buttonR1C2').text("Inventory");
-	$('#buttonR1C3').text("Retreat");
-
-	$('#buttonR1C4').hide();
-	$('#buttonR2C1').hide();
-	$('#buttonR2C2').hide();
-	$('#buttonR2C3').hide();
-	$('#buttonR2C4').hide();
-	$('#buttonR3C2').hide();
-	$('#buttonR3C4').hide();
-	
+function clearAllListeners() {
+	for (var i = 0; i < allButtons.length; i++) {
+		for (var j = 0; j < allButtons[i].length; j++) {
+			var btn = allButtons[i][j];
+			document.getElementById(btn).onclick = function(){};
+		}
+	}
 }
 
 //This is a class to control movement
 function moveControl() {
+	// Listeners cleared
+	clearAllListeners();
+
 	$('#buttonR1C1').text("Create Event");
 	$('#buttonR1C2').text("Up");
 	$('#buttonR3C2').text("Down");
@@ -270,13 +267,13 @@ function moveControl() {
 	$('#buttonR2C3').text("Right");
 
 	for (i = 0; i < moveButtons.length; i++) {
-		$(moveButtons[i]).show();
+		$('#' + moveButtons[i]).show();
 	}
 
-	document.getElementsById("buttonR1C1").onclick = function() {createEvent()};
+	document.getElementById("buttonR1C1").onclick = function() {createEvent()};
 
 	// Up Movement
-	document.getElementsById("buttonR1C2").onclick = function() {
+	document.getElementById("buttonR1C2").onclick = function() {
 		if (characterX != 0 && (currentFloor['map[characterX - 1][characterY]'] != null)) {
 			moveUp();
 		} else
@@ -395,12 +392,6 @@ function StairEvent(){
 			//generate new floor, move character to 5,5, set health = max health
 		}
 	}
-}
-
-function moveUp(){
-	//change characterX
-	//set currentRoom to the room moved to
-	//checks if there is an event in the room, if so set currentEvent to it, call the setUpEvent function on the event
 }
 
 //This is the encounter event constructor
