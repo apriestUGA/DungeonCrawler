@@ -141,9 +141,9 @@ $(document).ready(function(){
 });
 
 //This is the array containing all possible monster names
-var monsterNameArray = ["Bat", "Spider", "Snake"]
+var monsterNameArray = ["Bat", "Spider", "Snake"];
 
-var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2']
+var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2'];
 
 var characterName = "testCharacter";
 var characterLevel = 1;
@@ -264,7 +264,6 @@ function createEvent(){
 //This is a class to control movement
 function moveControl() {
 	$('#buttonR1C1').text("Create Event");
-	//Movement
 	$('#buttonR1C2').text("Up");
 	$('#buttonR3C2').text("Down");
 	$('#buttonR2C1').text("Left");
@@ -274,15 +273,70 @@ function moveControl() {
 		$(moveButtons[i]).show();
 	}
 
+	document.getElementsById("buttonR1C1").onclick = function() {createEvent()};
+
+	// Up Movement
+	document.getElementsById("buttonR1C2").onclick = function() {
+		if (characterX != 0 && (currentFloor['map[characterX - 1][characterY]'] != null)) {
+			moveUp();
+		} else
+			alert("You cannot move up");
+	};
+
+	// Down Movement
+	document.getElementsById("buttonR3C2").onclick = function() {
+		if (characterX != 10 && (currentFloor['map[characterX + 1][characterY]'] != null)) {
+			moveDown();
+		} else
+			alert("You cannot move down");
+	};
+
+	// Right Movement
+	document.getElementsById("buttonR2C3").onclick = function() {
+		if (characterY != 10 && (currentFloor['map[characterX][characterY + 1]'] != null)) {
+			moveRight();
+		} else
+			alert("You cannot move right");
+	};	
+
+	// Left Movement
+	document.getElementsById("buttonR2C1").onclick = function() {
+		if (characterY != 0 && (currentFloor['map[characterX][characterY - 1]'] != null)) {
+			moveRight();
+		} else
+			alert("You cannot move right");
+	};	
+
 	$('#buttonR1C3').text("Inventory");
 	$('#buttonR2C2').text("Interact");
 
 	// Hiding buttons
-	$('#buttonR1C5').hide();
-	$('#buttonR2C5').hide();
-	$('#buttonR3C5').hide();
 	$('#buttonR3C1').hide();
 	$('#buttonR3C3').hide();
+}
+
+function moveUp() {
+	currentRoom = currentFloor['map[characterX - 1][characterY]'];
+	currentEvent = currentRoom.event;
+	characterX--;
+}
+
+function moveDown() {
+	currentRoom = currentFloor['map[characterX + 1][characterY]'];
+	currentEvent = currentRoom.event;
+	characterX++;
+}
+
+function moveRight() {
+	currentRoom = currentFloor['map[characterX][characterY + 1]'];
+	currentEvent = currentRoom.event;
+	characterX++;
+}
+
+function moveLeft() {
+	currentRoom = currentFloor['map[characterX][characterY - 1]'];
+	currentEvent = currentRoom.event;
+	characterX--;
 }
 
 //This is the floor constructor
