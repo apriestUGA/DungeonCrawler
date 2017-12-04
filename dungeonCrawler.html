@@ -294,7 +294,7 @@ function moveControl() {
 	// Left Movement
 	document.getElementById(moveButtons[2]).onclick = function() {
 		if (characterY != 0 && (currentFloor['map[characterX][characterY - 1]'] != null)) {
-			moveRight();
+			moveLeftt();
 		} else
 			alert("You cannot move left");
 	};
