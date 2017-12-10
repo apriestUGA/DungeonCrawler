@@ -156,14 +156,10 @@ var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'butt
 // Attack, Defend, Run
 var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
 var extraButtons = ['buttonR3C1', 'buttonR3C3'];
-<<<<<<< HEAD
-var allButtons = [moveButtons, encounterButtons, extraButtons];
-=======
 var monsterAttackButtons = ['buttonR2C1', 'buttonR2C2', 'buttonR2C3', 'buttonR3C1', 'buttonR3C2'];
 var allButtons = [moveButtons, encounterButtons, extraButtons];
 
 
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 
 
 //VARIABLE DECLARATIONS
@@ -230,25 +226,6 @@ function Entity(entityName, entityLevel){
 	}
 }
 
-<<<<<<< HEAD
-function clearAllListeners() {
-	for (var i = 0; i < allButtons.length; i++) {
-		for (var j = 0; j < allButtons[i].length; j++) {
-			var btn = allButtons[i][j];
-			document.getElementById(btn).onclick = function(){};
-			$('#' + btn).hide();
-		}
-	}
-}
-
-//This is a class to control movement
-function moveControl() {
-	// Listeners cleared
-	clearAllListeners();
-
-	for (i = 0; i < moveButtons.length; i++) {
-		$('#' + moveButtons[i]).show();
-=======
 //This is the floor constructor
 function Floor(characterLevel, map){
 	for (var x = 0; x < 11; x++){
@@ -418,20 +395,10 @@ function updateMonsterInfo(monsterArray){
 	$("#enemyList").html("");
 	for(var j=0; j<monsterArray.length; ++j){
 		monsterArray[j].printInfo();
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 	}
 }
 
 
-<<<<<<< HEAD
-	$('#' + moveButtons[0]).text("Up");
-	$('#' + moveButtons[1]).text("Down");
-	$('#' + moveButtons[2]).text("Left");
-	$('#' + moveButtons[3]).text("Right");
-	$('#' + moveButtons[4]).text("Inventory");
-	$('#' + moveButtons[5]).text("Interact");
-=======
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 
 
 
@@ -480,13 +447,8 @@ function moveControl() {
 	$('#' + moveButtons[4]).text("Inventory");
 	$('#' + moveButtons[5]).text("Interact");
 	// Up Movement
-<<<<<<< HEAD
 	document.getElementById(moveButtons[0]).onclick = function() {
-		if (characterX != 0 && (currentFloor['map[characterX - 1][characterY]'] != null)) {
-=======
-	document.getElementById("buttonR1C2").onclick = function() {
 		if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 			moveUp();
 			if(currentEvent != null){
 				currentEvent.setUpEvent();
@@ -495,13 +457,8 @@ function moveControl() {
 			alert("You cannot move up");
 	};
 	// Down Movement
-<<<<<<< HEAD
 	document.getElementById(moveButtons[1]).onclick = function() {
-		if (characterX != 10 && (currentFloor['map[characterX + 1][characterY]'] != null)) {
-=======
-	document.getElementById("buttonR3C2").onclick = function() {
 		if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 			moveDown();
 			if(currentEvent != null){
 				currentEvent.setUpEvent();
@@ -509,36 +466,8 @@ function moveControl() {
 		} else
 			alert("You cannot move down");
 	};
-<<<<<<< HEAD
-
-	// Left Movement
-	document.getElementById(moveButtons[2]).onclick = function() {
-		if (characterY != 0 && (currentFloor['map[characterX][characterY - 1]'] != null)) {
-			moveLeftt();
-		} else
-			alert("You cannot move left");
-	};
-	
 	// Right Movement
 	document.getElementById(moveButtons[3]).onclick = function() {
-		if (characterY != 10 && (currentFloor['map[characterX][characterY + 1]'] != null)) {
-			moveRight();
-		} else
-			alert("You cannot move right");
-	};
-
-	// Inventory
-	document.getElementById(moveButtons[4]).onclick = function() {
-		alert("Here's your inventory! (empty)");
-	};
-
-	// Interact
-	document.getElementById(moveButtons[5]).onclick = function() {
-		alert("It's a rock");
-	};
-=======
-	// Right Movement
-	document.getElementById("buttonR2C3").onclick = function() {
 		if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
 			moveRight();
 			if(currentEvent != null){
@@ -548,7 +477,7 @@ function moveControl() {
 			alert("You cannot move right");
 	};	
 	// Left Movement
-	document.getElementById("buttonR2C1").onclick = function() {
+	document.getElementById(moveButtons[2]).onclick = function() {
 		if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
 			moveLeft();
 			if(currentEvent != null){
@@ -568,7 +497,6 @@ function clearAllListeners() {
 		}
 	}
 	$("#eventText").html("");
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 function moveUp() {
@@ -592,27 +520,19 @@ function moveDown() {
 function moveRight() {
 	currentRoom = map[characterX][characterY + 1];
 	currentEvent = currentRoom.event;
-<<<<<<< HEAD
-	characterY++;
-=======
 	previousCharacterX = characterX;
 	previousCharacterY = characterY;
 	characterY++;
 	updateCharacterLocation();
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 function moveLeft() {
 	currentRoom = map[characterX][characterY - 1];
 	currentEvent = currentRoom.event;
-<<<<<<< HEAD
-	characterY--;
-=======
 	previousCharacterX = characterX;
 	previousCharacterY = characterY;
 	characterY--;
 	updateCharacterLocation();
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 
@@ -743,29 +663,6 @@ function attack(passedEvent)
 	}
 }//attack function
 
-<<<<<<< HEAD
-	function setUpEvent(){
-		/// Listeners cleared
-		clearAllListeners();
-		$('#' + moveButtons[0]).text("Up");
-		$('#' + moveButtons[1]).text("Down");
-		$('#' + moveButtons[2]).text("Left");
-		$('#' + moveButtons[3]).text("Right");
-		$('#' + moveButtons[4]).text("Inventory");
-		$('#' + moveButtons[5]).text("Interact");
-
-		for (i = 0; i < moveButtons.length; i++) {
-			$('#' + moveButtons[i]).show();
-		}
-
-		//event listeners
-=======
-
-
-
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
-
-
 //
 //
 //MINIMAP STUFF
@@ -804,11 +701,6 @@ function updateMiniMap(map) { //update minimap based on the room array
 				}
 			}
 			else{
-<<<<<<< HEAD
-				alert("You cannot move up");
-			}
-		}
-=======
 				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
 				if(i < 10){
 					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
@@ -822,37 +714,16 @@ function updateMiniMap(map) { //update minimap based on the room array
 				if(j > 0){
 					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
 				}
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 
 			}
 		}
 	}
 }
 
-<<<<<<< HEAD
-//This is the encounter event constructor
-function EventEncounter(characterLevel){
-	var numMonsters = 4;
-	var monsterArray = [];
-	for(var i=0; i<numMonsters; ++i){
-		monsterArray.push(new Entity(null, characterLevel));
-	}
-	for(var j=0; j<monsterArray.length; ++j){
-		monsterArray[j].printInfo();
-	}
-
-	function setUpEvent() {
-		clearAllListeners();
-		// set Attack Defense Retreat listeners
-		document.getElementById(encounterButtons[0]).onclick = function() {}; // Attack
-		document.getElementById(encounterButtons[1]).onclick = function() {};
-	}
-=======
 //UPDATE CHARACTER LOCATION ON MINIMAP
 function updateCharacterLocation(){
 	document.getElementById("img" + (2*previousCharacterX) + "." + (2*previousCharacterY)).src = "dungeonRoom.png";
 	document.getElementById("img" + (2*characterX) + "." + (2*characterY)).src = "dungeonOccupied.png";
->>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 //Set up minimap area
