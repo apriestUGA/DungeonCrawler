@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="mainstyle.css"/>
 </head>
 <body>
-
 <div id="gameMainPage">
 	<table id="mainGameTable">
 	<tr>
@@ -32,7 +31,6 @@
 				</tr>
 			</table>
 		</td>
-
 		<td id="screenCenter">
 			<table id="screenCenterTable">
 				<tr>
@@ -46,7 +44,7 @@
 							<tr id="buttonRowOne">
 								<td id="buttonRowOneCellOne">
 									<button id="buttonR1C1">
-										Create Event
+										Text
 									</button>
 								</td>
 								<td id="buttonRowOneCellTwo">
@@ -99,7 +97,6 @@
 				</tr>
 			</table>
 		</td>
-
 		<td id="screenRight">
 			<table id="screenRightTable">
 				<tr>
@@ -129,10 +126,18 @@
 	</tr>
 	</table>
 </div>
+
+
+
+
+
+
 <script>
+
+//DOCUMENT READY
 $(document).ready(function(){
 	updateCharacterStats();
-	generateNewFloor(1, map);
+	generateNewFloor(characterLevel, map);
 	updateMiniMap(map);
 	updateCharacterLocation();
 	moveControl();
@@ -140,18 +145,31 @@ $(document).ready(function(){
 	alert("Document Ready");
 });
 
+
+
+
+//BUTTON DECLARATIONS
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"];
+// Up, Down, Left, Right, Inventory, Interact
+var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'buttonR1C3', 'buttonR2C2'];
+// Attack, Defend, Run
+var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
+var extraButtons = ['buttonR3C1', 'buttonR3C3'];
+var monsterAttackButtons = ['buttonR2C1', 'buttonR2C2', 'buttonR2C3', 'buttonR3C1', 'buttonR3C2'];
+var allButtons = [moveButtons, encounterButtons, extraButtons];
 
-var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2'];
 
+
+
+//VARIABLE DECLARATIONS
 var characterName = "testCharacter";
 var characterLevel = 1;
 var characterXP = 0;
-var characterHP = 1;//set equation based on characterLevel
-var characterAttack = 1;//set equation based on characterLevel
-var characterDefence = 1;//set equation based on characterLevel
-var characterMaxHP = 10;
+var characterHP = 20;//set equation based on characterLevel
+var characterAttack = 4;//set equation based on characterLevel
+var characterDefence = 4;//set equation based on characterLevel
+var characterMaxHP = 20;
 var characterX = 5;
 var characterY = 5;
 var previousCharacterX = 5;
@@ -160,71 +178,21 @@ var currentFloor = null;
 var currentRoom = null;
 var currentEvent = null;
 var map = [];
+var globalMonsterArray = [];
 
-function generateNewFloor(){
-	currentFloor = new Floor(1, map);
-}
 
-//updates character stats on the interface
-function updateCharacterStats(){
-	$('.charName').html(characterName.toString());
-	$('.charLevel').html(characterLevel);
-	$('.charXP').html(characterXP);
-	$('.charHP').html(characterHP);
-}
-function updateMiniMap( map ) { //update minimap based on the room array
-	for(var i = 0; i < 11; ++i){
-		for(var j = 0; j < 11; ++j){
-			if(map[i][j] != null){//Room exists
-				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
-				if(i < 10 && !(map[i+1][j] == null)){//if there is a room south
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
-				}
-				else{
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if( i > 0 && !(map[i-1][j] == null)){//if there is a room north
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
-				}
-				else{
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if(j < 10 && !(map[i][j+1] == null)){//if there is a room east
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
-				}
-				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
-				}
-				if(j > 0 && !(map[i][j-1] == null)){//if there is a room west
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
-				}
-				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
-				}
-			}
-			else{
-				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
-				if(i < 10){
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if( i > 0){
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if(j < 10){
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
-				}
-				if(j > 0){
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
-				}
 
-			}
-		}
-	}
-}
 
-function updateCharacterLocation(){
-	document.getElementById("img" + (2*previousCharacterX) + "." + (2*previousCharacterY)).src = "dungeonRoom.png";
-	document.getElementById("img" + (2*characterX) + "." + (2*characterY)).src = "dungeonOccupied.png";
+
+//
+//
+//GENERATORS AND CONSTRUCTORS
+//
+//
+
+//GENERATE FLOOR
+function generateNewFloor(characterLevelInternal, mapInternal){
+	currentFloor = new Floor(characterLevelInternal, mapInternal);
 }
 
 //Entity constructor
@@ -257,74 +225,277 @@ function Entity(entityName, entityLevel){
 	}
 }
 
-//This is a class to create an event
-function createEvent(){
-	new EventEncounter(4);
-	$('#buttonR1C1').text("Attack");
-	$('#buttonR1C2').text("Inventory");
-	$('#buttonR1C3').text("Retreat");
+//This is the floor constructor
+function Floor(characterLevel, map){
+	for (var x = 0; x < 11; x++){
+	    map[x] = new Array();
+	    for (var y=0; y < 11; y++){
+    	map[x][y] = null;
+    	}
+  	}
+	//for loop 2d array
+  var numberRooms = 4;
+  map[5][5] = new Room(characterLevel, "noEvent"); //Start room
+  var possibleRoomLocations = [[4,5], [6,5], [5,4], [5,6]]; //Possible locations from start room
+  var nextRoom = 0;
+  var nextRoomX= 0;
+  var nextRoomY= 0;
+  //array needs to be split in two to make sure only the unecessary potential room is removed.
+  var frontArr;
+  var backArr;
+  for(var i = 0; i < numberRooms; ++i)//minus 1 because the last room generated is the stair room
+  { 
+    //select random location from possibleRoomLocations, 
+    //this is an array of 2 length with index 0 = x and index 1 = y 
+    nextRoom = Math.floor(Math.random() * possibleRoomLocations.length);
+    nextRoomX= possibleRoomLocations[nextRoom][0];
+    nextRoomY= possibleRoomLocations[nextRoom][1];
+    //checks for out of bounds rooms
+    if(nextRoomX < 0 || nextRoomX > 10 || nextRoomY < 0 || nextRoomY > 10)
+    {
+      frontArr = possibleRoomLocations.slice(0,nextRoom);
+      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+      possibleRoomLocations = frontArr.concat(backArr);
+      i--;
+      continue;
+    }//if out of bounds  
+    //check if selected location is already occupied, if so, subtract 1 from i, otherwise
+    //generate a new room, add the location up, down, left, and right from it to the possibleRoomLocations
+    //for floor generation
+    if(map[nextRoomX][nextRoomY] == null){
+    	if( i != numberRooms-1){
+		    map[nextRoomX][nextRoomY] = new Room(characterLevel, "normal");
+		    //remove possible location, now that its been used.
+		    frontArr = possibleRoomLocations.slice(0,nextRoom);
+		    backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+		    possibleRoomLocations = frontArr.concat(backArr);
+		    //add all new possible rooms with respect to the location of the newly added room.
+		    possibleRoomLocations.push([nextRoomX, nextRoomY+1]);
+		    possibleRoomLocations.push([nextRoomX, nextRoomY-1]);
+		    possibleRoomLocations.push([nextRoomX+1, nextRoomY]);
+		    possibleRoomLocations.push([nextRoomX-1, nextRoomY]);
+		}
+		else{
+			map[nextRoomX][nextRoomY] = new Room(characterLevel, "stair");
+		}
+		map[nextRoomX][nextRoomY].event.setUpEvent = function(){
+			//SET UP ENCOUNTER EVENT, THIS NEEDS TO BE ADDED TO
+			clearAllListeners();
+			alert(this.type);
+			if(this.type == "normal"){
+				if(this.monsterArray.length == 0){
+					moveControl();
+				}
+				else{
+					attackControl();
+			    }
+			}
+			else if(this.type == "stair"){
+						alert("Set up stair event!");
+				      	clearAllListeners();
+				      	$("#eventText").html("You Have Reached The Stairs, click Interact to Move to Next Level!");
+						$('#' + moveButtons[0]).text("Up");
+						$('#' + moveButtons[1]).text("Down");
+						$('#' + moveButtons[2]).text("Left");
+						$('#' + moveButtons[3]).text("Right");
+						$('#' + moveButtons[4]).text("Inventory");
+						$('#' + moveButtons[5]).text("Interact");
+						for (i = 0; i < moveButtons.length; i++) {
+							$('#' + moveButtons[i]).show();
+						}
+						//Move to new floor (Interact)
+						document.getElementById("buttonR2C2").onclick = function(){
+							alert("move to new floor")
+							//THIS NEEDS TO BE ADDED TO
+						};
+						// Up Movement
+						document.getElementById("buttonR1C2").onclick = function() {
+							if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
+								moveUp();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move up");
+						};
+						// Down Movement
+						document.getElementById("buttonR3C2").onclick = function() {
+							if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
+								moveDown();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move down");
+						};
+						// Right Movement
+						document.getElementById("buttonR2C3").onclick = function() {
+							if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
+								moveRight();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move right");
+						};	
+						// Left Movement
+						document.getElementById("buttonR2C1").onclick = function() {
+							if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
+								moveLeft();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move left");
+						};
+			}
+		}
 
-	$('#buttonR1C4').hide();
-	$('#buttonR2C1').hide();
-	$('#buttonR2C2').hide();
-	$('#buttonR2C3').hide();
-	$('#buttonR2C4').hide();
-	$('#buttonR3C2').hide();
-	$('#buttonR3C4').hide();
-	
+    }//if new room can be made.  
+    else if(map[nextRoomX][nextRoomY] != null)//if the room cannot be made, since the room is already occupied
+    {
+      frontArr = possibleRoomLocations.slice(0,nextRoom);
+      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+      possibleRoomLocations = frontArr.concat(backArr);
+      i--;
+      continue;
+    }
+  }//for loop room generation
+}//floor function
+
+//This is the room constructor
+function Room(characterLevel, generateEventType){
+	this.event = new Event(characterLevel, generateEventType);
+}
+
+
+
+
+
+
+//
+//
+//UPDATE INFO
+//
+//
+
+//UPDATE CHARACTER STATS
+//updates character stats on the interface
+function updateCharacterStats(){
+	$('.charName').html(characterName.toString());
+	$('.charLevel').html(characterLevel);
+	$('.charXP').html(characterXP);
+	$('.charHP').html(characterHP);
+}
+
+//UPDATE MONSTER PANEL
+function updateMonsterInfo(monsterArray){
+	alert("updating monster info");
+	$("#enemyList").html("");
+	for(var j=0; j<monsterArray.length; ++j){
+		monsterArray[j].printInfo();
+	}
+}
+
+
+
+
+
+
+//
+//
+//EVENTS AND CONTROLS
+//
+//
+
+function attackControl(){
+	if(currentEvent.monsterArray.length > 0){
+		clearAllListeners();
+		updateMonsterInfo(currentEvent.monsterArray);
+		$('#' + encounterButtons[0]).text("Attack");
+		$('#' + encounterButtons[1]).text("");
+		$('#' + encounterButtons[2]).text("Retreat");
+		for (i = 0; i < encounterButtons.length; i++) {
+			$('#' + encounterButtons[i]).show();
+		}
+		//Do attack
+		document.getElementById("buttonR1C1").onclick = function(){
+			attack(currentEvent);
+		};
+		document.getElementById("buttonR1C3").onclick = function(){
+			alert("retreat");
+		};
+	}
+	else{
+		$("#enemyList").html("");
+		moveControl();
+	}
 }
 
 //This is a class to control movement
 function moveControl() {
-	$('#buttonR1C1').text("Create Event");
-	$('#buttonR1C2').text("Up");
-	$('#buttonR3C2').text("Down");
-	$('#buttonR2C1').text("Left");
-	$('#buttonR2C3').text("Right");
-
+	// Listeners cleared
+	clearAllListeners();
 	for (i = 0; i < moveButtons.length; i++) {
-		$(moveButtons[i]).show();
+		$('#' + moveButtons[i]).show();
 	}
-
-
+	$('#' + moveButtons[0]).text("Up");
+	$('#' + moveButtons[1]).text("Down");
+	$('#' + moveButtons[2]).text("Left");
+	$('#' + moveButtons[3]).text("Right");
+	$('#' + moveButtons[4]).text("Inventory");
+	$('#' + moveButtons[5]).text("Interact");
 	// Up Movement
 	document.getElementById("buttonR1C2").onclick = function() {
 		if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
 			moveUp();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move up");
 	};
-
 	// Down Movement
 	document.getElementById("buttonR3C2").onclick = function() {
 		if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
 			moveDown();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move down");
 	};
-
 	// Right Movement
 	document.getElementById("buttonR2C3").onclick = function() {
 		if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
 			moveRight();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move right");
 	};	
-
 	// Left Movement
 	document.getElementById("buttonR2C1").onclick = function() {
 		if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
 			moveLeft();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move left");
-	};	
+	};
+}
 
-	$('#buttonR1C3').text("Inventory");
-	$('#buttonR2C2').text("Interact");
-
-	// Hiding buttons
-	$('#buttonR3C1').hide();
-	$('#buttonR3C3').hide();
+function clearAllListeners() {
+	for (var i = 0; i < allButtons.length; i++) {
+		for (var j = 0; j < allButtons[i].length; j++) {
+			var btn = allButtons[i][j];
+			document.getElementById(btn).onclick = function(){};
+			$('#' + btn).hide();
+		}
+	}
+	$("#eventText").html("");
 }
 
 function moveUp() {
@@ -363,138 +534,200 @@ function moveLeft() {
 	updateCharacterLocation();
 }
 
-//This is the floor constructor
-function Floor(characterLevel, map)
-{
-	for (var x = 0; x < 11; x++) 
-	{
-	  map[x] = new Array();
-	  for (var y=0; y < 11; y++) 
-  {
-    map[x][y] = null;
-  }
-}//for loop 2d array
-
-  var numberRooms = 20;
-  map[5][5] = new Room(characterLevel, "noEvent"); //Start room
-  var possibleRoomLocations = [[4,5], [6,5], [5,4], [5,6]]; //Possible locations from start room
-  var nextRoom = 0;
-  var nextRoomX= 0;
-  var nextRoomY= 0;
-  //array needs to be split in two to make sure only the unecessary potential room is removed.
-  var frontArr;
-  var backArr;
-  for(var i = 0; i < numberRooms; ++i)//minus 1 because the last room generated is the stair room
-  { 
-    //select random location from possibleRoomLocations, 
-    //this is an array of 2 length with index 0 = x and index 1 = y 
-    nextRoom = Math.floor(Math.random() * possibleRoomLocations.length);
-    nextRoomX= possibleRoomLocations[nextRoom][0];
-    nextRoomY= possibleRoomLocations[nextRoom][1];
-    //checks for out of bounds rooms
-    if(nextRoomX < 0 || nextRoomX > 10 || nextRoomY < 0 || nextRoomY > 10)
-    {
-      frontArr = possibleRoomLocations.slice(0,nextRoom);
-      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
-      possibleRoomLocations = frontArr.concat(backArr);
-      i--;
-      continue;
-    }//if out of bounds
-    
-    //check if selected location is already occupied, if so, subtract 1 from i, otherwise
-    //generate a new room, add the location up, down, left, and right from it to the possibleRoomLocations
-    //for floor generation
-    if(map[nextRoomX][nextRoomY] === null)
-    {
-      map[nextRoomX][nextRoomY] = new Room(characterLevel, "normal");
-      //remove possible location, now that its been used.
-      frontArr = possibleRoomLocations.slice(0,nextRoom);
-      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
-      possibleRoomLocations = frontArr.concat(backArr);
-      //add all new possible rooms with respect to the location of the newly added room.
-      possibleRoomLocations.push([nextRoomX, nextRoomY+1]);
-      possibleRoomLocations.push([nextRoomX, nextRoomY-1]);
-      possibleRoomLocations.push([nextRoomX+1, nextRoomY]);
-      possibleRoomLocations.push([nextRoomX-1, nextRoomY]);
-      console.log(possibleRoomLocations);
-    }//if new room can be made.
-    
-    
-    else if(map[nextRoomX][nextRoomY] === null && i == numberRooms-1)
-    {
-      map[nextRoomX][nextRoomY] = new Room(characterLevel, "stair");
-    }
-    else if(map[nextRoomX][nextRoomY] !== null)//if the room cannot be made, since the room is already occupied
-    {
-      frontArr = possibleRoomLocations.slice(0,nextRoom);
-      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
-      possibleRoomLocations = frontArr.concat(backArr);
-      i--;
-      continue;
-    }
-    
-  }//for loop room generation
-
-}//floor function
-
-//This is the room constructor
-function Room(characterLevel, generateEventType)
-{
-	var event = null;
-	if(generateEventType == "noEvent")
-	{
-		event = null;
-	}
-	else if(generateEventType == "stair")
-	{
-		event = new StairEvent();
-	}
-	else
-	{
-		event = new EventEncounter(characterLevel);
-	}
-}
-
-function StairEvent(){
-	//Allows for movement and interaction, if interaction, move to new floor (set character location, generate new floor, set characterHP to maxHP)
-
-	function setUpEvent(){
-		//buttons
-		$('#buttonR1C1').text("Create Event");
-		//Movement
-		$('#buttonR1C2').text("Up");
-		$('#buttonR3C2').text("Down");
-		$('#buttonR2C1').text("Left");
-		$('#buttonR2C3').text("Right");
-
-		for (i = 0; i < moveButtons.length; i++) {
-			$(moveButtons[i]).show();
-		}
-
-		$('#buttonR1C3').text("Inventory");
-		$('#buttonR2C2').text("Interact");
-
-		//event listeners
-
-	
-	}
-}
-
 
 //This is the encounter event constructor
-function EventEncounter(characterLevel){
-	var numMonsters = 4;
-	var monsterArray = [];
-	for(var i=0; i<numMonsters; ++i){
-		monsterArray.push(new Entity(null, characterLevel));
+function Event(characterLevel, eventType){
+	this.type = eventType;
+	if(eventType == "stair"){
+		alert("stair created");
+	}
+	this.numMonsters = 2;
+	this.monsterArray = [];
+	for(var i=0; i<this.numMonsters; ++i){
+		this.monsterArray.push(new Entity(null, characterLevel));
 	}
 }
 
-function updateMonsterInfo(monsterArray){
-	$("#enemyList").html("");
-	for(var j=0; j<monsterArray.length; ++j){
-		monsterArray[j].printInfo();
+function monsterAttack(monsterArray){
+	for(var i = 0; i < monsterArray.length; ++i){
+		if(characterDefence/2 > monsterArray[i].attack){
+			characterHP -= 1;
+		}
+		else{
+			characterHP -= (monsterArray[i].attack - characterDefence/2);
+		}
 	}
+	if(characterHP <= 0){
+		alert("Game Over");
+		//Call game over function
+	}
+	updateCharacterStats();
+}
+
+function attack(passedEvent)
+{
+	clearAllListeners();
+	for(var i = 0; i < passedEvent.monsterArray.length; ++i){
+		$('#' + monsterAttackButtons[i]).text(passedEvent.monsterArray[i].name);
+		$('#' + monsterAttackButtons[i]).show();
+	}
+	var frontArr;
+    var backArr;
+	//hitting the 1nd monster
+	document.getElementById("buttonR2C1").onclick = function()
+	{
+		if((passedEvent.monsterArray[0].defence/2) > characterAttack){
+			passedEvent.monsterArray[0].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[0].HP -= (characterAttack - (passedEvent.monsterArray[0].defence/2));
+		}
+		if (passedEvent.monsterArray[0].HP <= 0)
+		{
+      		passedEvent.monsterArray = passedEvent.monsterArray.slice(1);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//1st monster
+	//hitting 2nd
+	document.getElementById("buttonR2C2").onclick = function() 
+	{
+	 	if((passedEvent.monsterArray[1].defence/2) > characterAttack){
+			passedEvent.monsterArray[1].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[1].HP -= (characterAttack - (passedEvent.monsterArray[1].defence/2));
+		}
+		if (passedEvent.monsterArray[1].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,1);
+      	   backArr = passedEvent.monsterArray.slice(2,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();				  
+	}//2nd monster
+	//hitting 3rd
+	document.getElementById("buttonR2C3").onclick = function() 
+	{
+	 	if((passedEvent.monsterArray[2].defence/2) > characterAttack){
+			passedEvent.monsterArray[2].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[2].HP -= (characterAttack - (passedEvent.monsterArray[2].defence/2));
+		}
+		if (passedEvent.monsterArray[2].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,2);
+      	   backArr = passedEvent.monsterArray.slice(3,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//3rd monster
+	//hitting 4th
+	document.getElementById("buttonR3C1").onclick = function() 
+	{
+	    if((passedEvent.monsterArray[3].defence/2) > characterAttack){
+			passedEvent.monsterArray[3].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[3].HP -= (characterAttack - (passedEvent.monsterArray[3].defence/2));
+		}
+		if (passedEvent.monsterArray[3].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,3);
+      	   backArr = passedEvent.monsterArray.slice(4,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//if monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//4th monster
+	document.getElementById("buttonR3C2").onclick = function() 
+	{
+	    if((passedEvent.monsterArray[4].defence/2) > characterAttack){
+			passedEvent.monsterArray[4].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[4].HP -= (characterAttack - (passedEvent.monsterArray[4].defence/2));
+		}
+		if (passedEvent.monsterArray[4].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,4);
+      	   backArr = passedEvent.monsterArray.slice(5,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//if monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}
+}//attack function
+
+
+
+
+
+
+//
+//
+//MINIMAP STUFF
+//
+//
+
+//UPDATE MINIMAP
+function updateMiniMap(map) { //update minimap based on the room array
+	for(var i = 0; i < 11; ++i){
+		for(var j = 0; j < 11; ++j){
+			if(map[i][j] != null){//Room exists
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
+				if(i < 10 && !(map[i+1][j] == null)){//if there is a room south
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0 && !(map[i-1][j] == null)){//if there is a room north
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else if(i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10 && !(map[i][j+1] == null)){//if there is a room east
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
+				}
+				else if (j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0 && !(map[i][j-1] == null)){//if there is a room west
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
+				}
+				else if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+			}
+			else{
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
+				if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+
+			}
+		}
+	}
+}
+
+//UPDATE CHARACTER LOCATION ON MINIMAP
+function updateCharacterLocation(){
+	document.getElementById("img" + (2*previousCharacterX) + "." + (2*previousCharacterY)).src = "dungeonRoom.png";
+	document.getElementById("img" + (2*characterX) + "." + (2*characterY)).src = "dungeonOccupied.png";
 }
 
 //Set up minimap area
@@ -504,6 +737,7 @@ for(var i = 0; i < 21; ++i){
 	var newDiv = document.createElement('div');
 	newDiv.style.display = "inline-block";
 	newDiv.style.fontSize = "0";
+	newDiv.style.padding = "0px";
 	for(var j = 0; j < 21; ++j){
 		var newSpan = document.createElement('span');
 		newSpan.id = ""+i+"."+j;
