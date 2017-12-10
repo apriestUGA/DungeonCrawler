@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="mainstyle.css"/>
 </head>
 <body>
-
 <div id="gameMainPage">
 	<table id="mainGameTable">
 	<tr>
@@ -14,9 +13,7 @@
 			<table id="screenLeftTable">
 				<tr>
 					<td id="screenLeftTopCell" style="width:300px; height:100px; border-style:solid">
-						<p>
-							This is for Game title
-						</p>
+						<h3>Dungeon Crawler</h3>
 					</td>
 				</tr>
 				<tr>
@@ -34,7 +31,6 @@
 				</tr>
 			</table>
 		</td>
-
 		<td id="screenCenter">
 			<table id="screenCenterTable">
 				<tr>
@@ -101,7 +97,6 @@
 				</tr>
 			</table>
 		</td>
-
 		<td id="screenRight">
 			<table id="screenRightTable">
 				<tr>
@@ -131,15 +126,29 @@
 	</tr>
 	</table>
 </div>
+
+
+
+
+
+
 <script>
+
+//DOCUMENT READY
 $(document).ready(function(){
 	updateCharacterStats();
-	updateMiniMap();
+	generateNewFloor(characterLevel, map);
+	updateMiniMap(map);
+	updateCharacterLocation();
 	moveControl();
 	//If anything in this script is not correct, the document ready alert will not appear
 	alert("Document Ready");
 });
 
+
+
+
+//BUTTON DECLARATIONS
 //This is the array containing all possible monster names
 var monsterNameArray = ["Bat", "Spider", "Snake"];
 // Up, Down, Left, Right, Inventory, Interact
@@ -147,77 +156,49 @@ var moveButtons = ['buttonR1C2', 'buttonR3C2', 'buttonR2C1', 'buttonR2C3', 'butt
 // Attack, Defend, Run
 var encounterButtons = ['buttonR1C1', 'buttonR1C2', 'buttonR1C3'];
 var extraButtons = ['buttonR3C1', 'buttonR3C3'];
+<<<<<<< HEAD
+var allButtons = [moveButtons, encounterButtons, extraButtons];
+=======
+var monsterAttackButtons = ['buttonR2C1', 'buttonR2C2', 'buttonR2C3', 'buttonR3C1', 'buttonR3C2'];
 var allButtons = [moveButtons, encounterButtons, extraButtons];
 
+
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
+
+
+//VARIABLE DECLARATIONS
 var characterName = "testCharacter";
 var characterLevel = 1;
 var characterXP = 0;
-var characterHP = 1;//set equation based on characterLevel
-var characterAttack = 1;//set equation based on characterLevel
-var characterDefence = 1;//set equation based on characterLevel
-var characterMaxHP = 10;
+var characterHP = 20;//set equation based on characterLevel
+var characterAttack = 4;//set equation based on characterLevel
+var characterDefence = 4;//set equation based on characterLevel
+var characterMaxHP = 20;
 var characterX = 5;
 var characterY = 5;
-var currentFloor = new Floor();
+var previousCharacterX = 5;
+var previousCharacterY= 5;
+var currentFloor = null;
 var currentRoom = null;
 var currentEvent = null;
+var map = [];
+var globalMonsterArray = [];
 
-//updates character stats on the interface
-function updateCharacterStats(){
-	$('.charName').html(characterName.toString());
-	$('.charLevel').html(characterLevel);
-	$('.charXP').html(characterXP);
-	$('.charHP').html(characterHP);
-}
-function updateMiniMap() { //update minimap based on the room array
-	for(var i = 0; i < 11; ++i){
-		for(var j = 0; j < 11; ++j){
-			if(!(currentFloor['map[i][j]'] == null)){//Room exists
-				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
-				if(i < 10 && !(currentFloor['map[i+1][j]'] == null)){//if there is a room south
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
-				}
-				else{
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if( i > 0 && !(currentFloor['map[i-1][j]'] == null)){//if there is a room north
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
-				}
-				else{
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if(j < 10 && !(currentFloor['map[i][j+1]'] == null)){//if there is a room east
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
-				}
-				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
-				}
-				if(j > 0 && !(currentFloor['map[i][j-1]'] == null)){//if there is a room west
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
-				}
-				else{
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
-				}
-			}
-			else{
-				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
-				if(i < 10){
-					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if( i > 0){
-					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
-				}
-				if(j < 10){
-					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
-				}
-				if(j > 0){
-					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
-				}
 
-			}
-		}
-	}
+
+
+
+//
+//
+//GENERATORS AND CONSTRUCTORS
+//
+//
+
+//GENERATE FLOOR
+function generateNewFloor(characterLevelInternal, mapInternal){
+	currentFloor = new Floor(characterLevelInternal, mapInternal);
 }
+
 //Entity constructor
 function Entity(entityName, entityLevel){
 	var name;
@@ -249,6 +230,7 @@ function Entity(entityName, entityLevel){
 	}
 }
 
+<<<<<<< HEAD
 function clearAllListeners() {
 	for (var i = 0; i < allButtons.length; i++) {
 		for (var j = 0; j < allButtons[i].length; j++) {
@@ -266,30 +248,268 @@ function moveControl() {
 
 	for (i = 0; i < moveButtons.length; i++) {
 		$('#' + moveButtons[i]).show();
-	}
+=======
+//This is the floor constructor
+function Floor(characterLevel, map){
+	for (var x = 0; x < 11; x++){
+	    map[x] = new Array();
+	    for (var y=0; y < 11; y++){
+    	map[x][y] = null;
+    	}
+  	}
+	//for loop 2d array
+  var numberRooms = 4;
+  map[5][5] = new Room(characterLevel, "noEvent"); //Start room
+  var possibleRoomLocations = [[4,5], [6,5], [5,4], [5,6]]; //Possible locations from start room
+  var nextRoom = 0;
+  var nextRoomX= 0;
+  var nextRoomY= 0;
+  //array needs to be split in two to make sure only the unecessary potential room is removed.
+  var frontArr;
+  var backArr;
+  for(var i = 0; i < numberRooms; ++i)//minus 1 because the last room generated is the stair room
+  { 
+    //select random location from possibleRoomLocations, 
+    //this is an array of 2 length with index 0 = x and index 1 = y 
+    nextRoom = Math.floor(Math.random() * possibleRoomLocations.length);
+    nextRoomX= possibleRoomLocations[nextRoom][0];
+    nextRoomY= possibleRoomLocations[nextRoom][1];
+    //checks for out of bounds rooms
+    if(nextRoomX < 0 || nextRoomX > 10 || nextRoomY < 0 || nextRoomY > 10)
+    {
+      frontArr = possibleRoomLocations.slice(0,nextRoom);
+      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+      possibleRoomLocations = frontArr.concat(backArr);
+      i--;
+      continue;
+    }//if out of bounds  
+    //check if selected location is already occupied, if so, subtract 1 from i, otherwise
+    //generate a new room, add the location up, down, left, and right from it to the possibleRoomLocations
+    //for floor generation
+    if(map[nextRoomX][nextRoomY] == null){
+    	if( i != numberRooms-1){
+		    map[nextRoomX][nextRoomY] = new Room(characterLevel, "normal");
+		    //remove possible location, now that its been used.
+		    frontArr = possibleRoomLocations.slice(0,nextRoom);
+		    backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+		    possibleRoomLocations = frontArr.concat(backArr);
+		    //add all new possible rooms with respect to the location of the newly added room.
+		    possibleRoomLocations.push([nextRoomX, nextRoomY+1]);
+		    possibleRoomLocations.push([nextRoomX, nextRoomY-1]);
+		    possibleRoomLocations.push([nextRoomX+1, nextRoomY]);
+		    possibleRoomLocations.push([nextRoomX-1, nextRoomY]);
+		}
+		else{
+			map[nextRoomX][nextRoomY] = new Room(characterLevel, "stair");
+		}
+		map[nextRoomX][nextRoomY].event.setUpEvent = function(){
+			//SET UP ENCOUNTER EVENT, THIS NEEDS TO BE ADDED TO
+			clearAllListeners();
+			alert(this.type);
+			if(this.type == "normal"){
+				if(this.monsterArray.length == 0){
+					moveControl();
+				}
+				else{
+					attackControl();
+			    }
+			}
+			else if(this.type == "stair"){
+						alert("Set up stair event!");
+				      	clearAllListeners();
+				      	$("#eventText").html("You Have Reached The Stairs, click Interact to Move to Next Level!");
+						$('#' + moveButtons[0]).text("Up");
+						$('#' + moveButtons[1]).text("Down");
+						$('#' + moveButtons[2]).text("Left");
+						$('#' + moveButtons[3]).text("Right");
+						$('#' + moveButtons[4]).text("Inventory");
+						$('#' + moveButtons[5]).text("Interact");
+						for (i = 0; i < moveButtons.length; i++) {
+							$('#' + moveButtons[i]).show();
+						}
+						//Move to new floor (Interact)
+						document.getElementById("buttonR2C2").onclick = function(){
+							alert("move to new floor")
+							//THIS NEEDS TO BE ADDED TO
+						};
+						// Up Movement
+						document.getElementById("buttonR1C2").onclick = function() {
+							if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
+								moveUp();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move up");
+						};
+						// Down Movement
+						document.getElementById("buttonR3C2").onclick = function() {
+							if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
+								moveDown();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move down");
+						};
+						// Right Movement
+						document.getElementById("buttonR2C3").onclick = function() {
+							if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
+								moveRight();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move right");
+						};	
+						// Left Movement
+						document.getElementById("buttonR2C1").onclick = function() {
+							if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
+								moveLeft();
+								if(currentEvent != null){
+									currentEvent.setUpEvent();
+								}
+							} else
+								alert("You cannot move left");
+						};
+			}
+		}
 
+    }//if new room can be made.  
+    else if(map[nextRoomX][nextRoomY] != null)//if the room cannot be made, since the room is already occupied
+    {
+      frontArr = possibleRoomLocations.slice(0,nextRoom);
+      backArr = possibleRoomLocations.slice(nextRoom+1,possibleRoomLocations.length);
+      possibleRoomLocations = frontArr.concat(backArr);
+      i--;
+      continue;
+    }
+  }//for loop room generation
+}//floor function
+
+//This is the room constructor
+function Room(characterLevel, generateEventType){
+	this.event = new Event(characterLevel, generateEventType);
+}
+
+
+
+
+
+
+//
+//
+//UPDATE INFO
+//
+//
+
+//UPDATE CHARACTER STATS
+//updates character stats on the interface
+function updateCharacterStats(){
+	$('.charName').html(characterName.toString());
+	$('.charLevel').html(characterLevel);
+	$('.charXP').html(characterXP);
+	$('.charHP').html(characterHP);
+}
+
+//UPDATE MONSTER PANEL
+function updateMonsterInfo(monsterArray){
+	alert("updating monster info");
+	$("#enemyList").html("");
+	for(var j=0; j<monsterArray.length; ++j){
+		monsterArray[j].printInfo();
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
+	}
+}
+
+
+<<<<<<< HEAD
 	$('#' + moveButtons[0]).text("Up");
 	$('#' + moveButtons[1]).text("Down");
 	$('#' + moveButtons[2]).text("Left");
 	$('#' + moveButtons[3]).text("Right");
 	$('#' + moveButtons[4]).text("Inventory");
 	$('#' + moveButtons[5]).text("Interact");
+=======
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 
+
+
+
+//
+//
+//EVENTS AND CONTROLS
+//
+//
+
+function attackControl(){
+	if(currentEvent.monsterArray.length > 0){
+		clearAllListeners();
+		updateMonsterInfo(currentEvent.monsterArray);
+		$('#' + encounterButtons[0]).text("Attack");
+		$('#' + encounterButtons[1]).text("");
+		$('#' + encounterButtons[2]).text("Retreat");
+		for (i = 0; i < encounterButtons.length; i++) {
+			$('#' + encounterButtons[i]).show();
+		}
+		//Do attack
+		document.getElementById("buttonR1C1").onclick = function(){
+			attack(currentEvent);
+		};
+		document.getElementById("buttonR1C3").onclick = function(){
+			alert("retreat");
+		};
+	}
+	else{
+		$("#enemyList").html("");
+		moveControl();
+	}
+}
+
+//This is a class to control movement
+function moveControl() {
+	// Listeners cleared
+	clearAllListeners();
+	for (i = 0; i < moveButtons.length; i++) {
+		$('#' + moveButtons[i]).show();
+	}
+	$('#' + moveButtons[0]).text("Up");
+	$('#' + moveButtons[1]).text("Down");
+	$('#' + moveButtons[2]).text("Left");
+	$('#' + moveButtons[3]).text("Right");
+	$('#' + moveButtons[4]).text("Inventory");
+	$('#' + moveButtons[5]).text("Interact");
 	// Up Movement
+<<<<<<< HEAD
 	document.getElementById(moveButtons[0]).onclick = function() {
 		if (characterX != 0 && (currentFloor['map[characterX - 1][characterY]'] != null)) {
+=======
+	document.getElementById("buttonR1C2").onclick = function() {
+		if (characterX != 0 && (map[characterX - 1][characterY] != null)) {
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 			moveUp();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move up");
 	};
-
 	// Down Movement
+<<<<<<< HEAD
 	document.getElementById(moveButtons[1]).onclick = function() {
 		if (characterX != 10 && (currentFloor['map[characterX + 1][characterY]'] != null)) {
+=======
+	document.getElementById("buttonR3C2").onclick = function() {
+		if (characterX != 10 && (map[characterX + 1][characterY] != null)) {
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 			moveDown();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
 		} else
 			alert("You cannot move down");
 	};
+<<<<<<< HEAD
 
 	// Left Movement
 	document.getElementById(moveButtons[2]).onclick = function() {
@@ -316,55 +536,214 @@ function moveControl() {
 	document.getElementById(moveButtons[5]).onclick = function() {
 		alert("It's a rock");
 	};
+=======
+	// Right Movement
+	document.getElementById("buttonR2C3").onclick = function() {
+		if (characterY != 10 && (map[characterX][characterY + 1] != null)) {
+			moveRight();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
+		} else
+			alert("You cannot move right");
+	};	
+	// Left Movement
+	document.getElementById("buttonR2C1").onclick = function() {
+		if (characterY != 0 && (map[characterX][characterY - 1] != null)) {
+			moveLeft();
+			if(currentEvent != null){
+				currentEvent.setUpEvent();
+			}
+		} else
+			alert("You cannot move left");
+	};
+}
+
+function clearAllListeners() {
+	for (var i = 0; i < allButtons.length; i++) {
+		for (var j = 0; j < allButtons[i].length; j++) {
+			var btn = allButtons[i][j];
+			document.getElementById(btn).onclick = function(){};
+			$('#' + btn).hide();
+		}
+	}
+	$("#eventText").html("");
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 function moveUp() {
-	currentRoom = currentFloor['map[characterX - 1][characterY]'];
+	currentRoom = map[characterX - 1][characterY];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterX--;
+	updateCharacterLocation();
 }
 
 function moveDown() {
-	currentRoom = currentFloor['map[characterX + 1][characterY]'];
+	currentRoom = map[characterX + 1][characterY];
 	currentEvent = currentRoom.event;
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
 	characterX++;
+	updateCharacterLocation();
 }
 
 function moveRight() {
-	currentRoom = currentFloor['map[characterX][characterY + 1]'];
+	currentRoom = map[characterX][characterY + 1];
 	currentEvent = currentRoom.event;
+<<<<<<< HEAD
 	characterY++;
+=======
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
+	characterY++;
+	updateCharacterLocation();
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 function moveLeft() {
-	currentRoom = currentFloor['map[characterX][characterY - 1]'];
+	currentRoom = map[characterX][characterY - 1];
 	currentEvent = currentRoom.event;
+<<<<<<< HEAD
 	characterY--;
+=======
+	previousCharacterX = characterX;
+	previousCharacterY = characterY;
+	characterY--;
+	updateCharacterLocation();
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
-//This is the floor constructor
-function Floor(characterLevel){
-	var map = [];
-	for(var i = 0; i < 11; ++i){
-		var row = [];
-		for(var j = 0; j < 11; ++j){
-			row[j] = null;
-		}
-		map[i] = row;
+
+//This is the encounter event constructor
+function Event(characterLevel, eventType){
+	this.type = eventType;
+	if(eventType == "stair"){
+		alert("stair created");
 	}
-
-	var numberRooms = 10;
-	
+	this.numMonsters = 2;
+	this.monsterArray = [];
+	for(var i=0; i<this.numMonsters; ++i){
+		this.monsterArray.push(new Entity(null, characterLevel));
+	}
 }
 
-//This is the room constructor
-function Room(characterLevel){
-	this.event = new EventEncounter(characterLevel);
+function monsterAttack(monsterArray){
+	for(var i = 0; i < monsterArray.length; ++i){
+		if(characterDefence/2 > monsterArray[i].attack){
+			characterHP -= 1;
+		}
+		else{
+			characterHP -= (monsterArray[i].attack - characterDefence/2);
+		}
+	}
+	if(characterHP <= 0){
+		alert("Game Over");
+		//Call game over function
+	}
+	updateCharacterStats();
 }
 
-function StairEvent(){
-	//Allows for movement and interaction, if interaction, move to new floor (set character location, generate new floor, set characterHP to maxHP)
+function attack(passedEvent)
+{
+	clearAllListeners();
+	for(var i = 0; i < passedEvent.monsterArray.length; ++i){
+		$('#' + monsterAttackButtons[i]).text(passedEvent.monsterArray[i].name);
+		$('#' + monsterAttackButtons[i]).show();
+	}
+	var frontArr;
+    var backArr;
+	//hitting the 1nd monster
+	document.getElementById("buttonR2C1").onclick = function()
+	{
+		if((passedEvent.monsterArray[0].defence/2) > characterAttack){
+			passedEvent.monsterArray[0].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[0].HP -= (characterAttack - (passedEvent.monsterArray[0].defence/2));
+		}
+		if (passedEvent.monsterArray[0].HP <= 0)
+		{
+      		passedEvent.monsterArray = passedEvent.monsterArray.slice(1);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//1st monster
+	//hitting 2nd
+	document.getElementById("buttonR2C2").onclick = function() 
+	{
+	 	if((passedEvent.monsterArray[1].defence/2) > characterAttack){
+			passedEvent.monsterArray[1].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[1].HP -= (characterAttack - (passedEvent.monsterArray[1].defence/2));
+		}
+		if (passedEvent.monsterArray[1].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,1);
+      	   backArr = passedEvent.monsterArray.slice(2,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();				  
+	}//2nd monster
+	//hitting 3rd
+	document.getElementById("buttonR2C3").onclick = function() 
+	{
+	 	if((passedEvent.monsterArray[2].defence/2) > characterAttack){
+			passedEvent.monsterArray[2].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[2].HP -= (characterAttack - (passedEvent.monsterArray[2].defence/2));
+		}
+		if (passedEvent.monsterArray[2].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,2);
+      	   backArr = passedEvent.monsterArray.slice(3,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//3rd monster
+	//hitting 4th
+	document.getElementById("buttonR3C1").onclick = function() 
+	{
+	    if((passedEvent.monsterArray[3].defence/2) > characterAttack){
+			passedEvent.monsterArray[3].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[3].HP -= (characterAttack - (passedEvent.monsterArray[3].defence/2));
+		}
+		if (passedEvent.monsterArray[3].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,3);
+      	   backArr = passedEvent.monsterArray.slice(4,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//if monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}//4th monster
+	document.getElementById("buttonR3C2").onclick = function() 
+	{
+	    if((passedEvent.monsterArray[4].defence/2) > characterAttack){
+			passedEvent.monsterArray[4].HP -= 1;
+		}
+		else{
+	    	passedEvent.monsterArray[4].HP -= (characterAttack - (passedEvent.monsterArray[4].defence/2));
+		}
+		if (passedEvent.monsterArray[4].HP <= 0)
+		{
+		   frontArr = passedEvent.monsterArray.slice(0,4);
+      	   backArr = passedEvent.monsterArray.slice(5,5);
+      	   passedEvent.monsterArray = frontArr.concat(backArr);
+		}//if monster dead
+		monsterAttack(passedEvent.monsterArray);
+		attackControl();
+	}
+}//attack function
 
+<<<<<<< HEAD
 	function setUpEvent(){
 		/// Listeners cleared
 		clearAllListeners();
@@ -380,24 +759,77 @@ function StairEvent(){
 		}
 
 		//event listeners
+=======
 
-		//Move up
-		document.getElementById("buttonR1C2").onclick = function(){
-			if(characterX != 0 && currentFloor['map[characterX - 1][characterY]'] != null){
-				moveUp();
+
+
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
+
+
+//
+//
+//MINIMAP STUFF
+//
+//
+
+//UPDATE MINIMAP
+function updateMiniMap(map) { //update minimap based on the room array
+	for(var i = 0; i < 11; ++i){
+		for(var j = 0; j < 11; ++j){
+			if(map[i][j] != null){//Room exists
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
+				if(i < 10 && !(map[i+1][j] == null)){//if there is a room south
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0 && !(map[i-1][j] == null)){//if there is a room north
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else if(i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10 && !(map[i][j+1] == null)){//if there is a room east
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
+				}
+				else if (j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0 && !(map[i][j-1] == null)){//if there is a room west
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
+				}
+				else if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
 			}
 			else{
+<<<<<<< HEAD
 				alert("You cannot move up");
 			}
 		}
+=======
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
+				if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 
-		//Floor movement
-		document.getElementById("buttonR2C2").onclick = function(){
-			//generate new floor, move character to 5,5, set health = max health
+			}
 		}
 	}
 }
 
+<<<<<<< HEAD
 //This is the encounter event constructor
 function EventEncounter(characterLevel){
 	var numMonsters = 4;
@@ -415,6 +847,12 @@ function EventEncounter(characterLevel){
 		document.getElementById(encounterButtons[0]).onclick = function() {}; // Attack
 		document.getElementById(encounterButtons[1]).onclick = function() {};
 	}
+=======
+//UPDATE CHARACTER LOCATION ON MINIMAP
+function updateCharacterLocation(){
+	document.getElementById("img" + (2*previousCharacterX) + "." + (2*previousCharacterY)).src = "dungeonRoom.png";
+	document.getElementById("img" + (2*characterX) + "." + (2*characterY)).src = "dungeonOccupied.png";
+>>>>>>> d2b794f9e8199724d0cbf717265db2480cf5b912
 }
 
 //Set up minimap area
@@ -424,6 +862,7 @@ for(var i = 0; i < 21; ++i){
 	var newDiv = document.createElement('div');
 	newDiv.style.display = "inline-block";
 	newDiv.style.fontSize = "0";
+	newDiv.style.padding = "0px";
 	for(var j = 0; j < 21; ++j){
 		var newSpan = document.createElement('span');
 		newSpan.id = ""+i+"."+j;
