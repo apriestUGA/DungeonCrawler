@@ -5,25 +5,29 @@ body {
 
 #mainGameTable {
     margin: auto;
-    /*width: 90%;*/
+    width: 80%;
+    border-collapse: collapse;
 }
 
 #screenLeft {
     width:300px;
     height:600px;
     border-style:solid;
+    border-collapse: collapse;
 }
 
 #screenCenter {
-    width:600px; 
+    width:600px;
     height:600px;
     border-style:solid;
+    border-collapse: collapse;
 }
 
 #screenRight {
     width:300px;
     height:600px;
     border-style:solid;
+    border-collapse: collapse;
 }
 
 button {
@@ -37,4 +41,30 @@ button {
     height: 30px;
     text-align: center;
     font-size: 11px;
+}
+
+button:hover {
+    background-color: #ff8080;
+}
+
+miniMapDiv span {
+    padding: 0px;
+    font-size: 0px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+miniMapDiv div {
+    display: inline-block;
+    font-size: 0px;
+    padding: 0px;
+    -webkit-padding-start: 0px;
+    white-space: nowrap;
+}
+
+miniMapDiv img {
+    margin: 0px;
+    padding: 0px;
+    -webkit-padding-start: 0px;
+    white-space: nowrap;
 }
