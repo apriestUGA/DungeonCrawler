@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
+<link rel="stylesheet" href="mainstyle.css"/>
+</head>
+<body>
+
+<div id="gameMainPage">
+	<table id="mainGameTable">
+	<tr>
+		<td id="screenLeft">
+			<table id="screenLeftTable">
+				<tr>
+					<td id="screenLeftTopCell" style="width:300px; height:100px; border-style:solid">
+						<p>
+							This is for Game title
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenLeftCenterCell" style="width:300px; height:300px; border-style:solid">
+						<p id="enemyList">
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenLeftBottomCell" style="width:300px; height:200px; border-style:solid">
+						<p>
+							This is for load, save, etc
+						</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td id="screenCenter">
+			<table id="screenCenterTable">
+				<tr>
+					<td id="screenCenterTopCell" style="width:600px; height:450px; border-style:solid">
+						<p id="eventText" style="width:600px; height:450px"></p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenCenterBottomCell" style="width:600px; height:100px; border-style:solid">
+						<table id="buttonTable" style="margin:auto">
+							<tr id="buttonRowOne">
+								<td id="buttonRowOneCellOne">
+									<button id="buttonR1C1">
+										Create Event
+									</button>
+								</td>
+								<td id="buttonRowOneCellTwo">
+									<button id="buttonR1C2">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowOneCellThree">
+									<button id="buttonR1C3">
+										Text
+									</button>
+								</td>
+							</tr>
+							<tr id="buttonRowTwo">
+								<td id="buttoneRowTwoCellOne">
+									<button id="buttonR2C1">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellTwo">
+									<button id="buttonR2C2">
+										Text
+									</button>
+								</td>
+								<td id="buttoneRowTwoCellThree">
+									<button id="buttonR2C3">
+										Text
+									</button>
+								</td>
+							</tr>
+							<tr id="buttonRowThree">
+								<td id="buttonRowThreeCellOne">
+									<button id="buttonR3C1">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellTwo">
+									<button id="buttonR3C2">
+										Text
+									</button>
+								</td>
+								<td id="buttonRowThreeCellThree">
+									<button id="buttonR3C3">
+										Text
+									</button>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+
+		<td id="screenRight">
+			<table id="screenRightTable">
+				<tr>
+					<td id="screenRightTopCell" style="width:300px; height:150px; border-style:solid">
+					<div id="miniMapDiv">
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenRightCenterCell" style="width:300px; height:300px; border-style:solid">
+						<p>Character Statistics:</br>
+							Name: <span class="charName"></span><br>
+							Level: <span class="charLevel"></span><br>
+							Health: <span class="charHP"></span><br>
+							XP: <span class="charXP"></span><br>
+
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td id="screenRightBottomCell" style="width:300px; height:150px; border-style:solid">
+						<p>This is for anything</p>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	</table>
+</div>
+<script>
+$(document).ready(function(){
+	updateCharacterStats();
+	updateMiniMap();
+	moveControl();
+	//If anything in this script is not correct, the document ready alert will not appear
+	alert("Document Ready");
+});
+
+//This is the array containing all possible monster names
+var monsterNameArray = ["Bat", "Spider", "Snake"]
+
+var moveButtons = ['#buttonR1C2', '#buttonR3C2', '#buttonR2C1', '#buttonR2C3', '#buttonR1C3', '#buttonR2C2']
+
+var characterName = "testCharacter";
+var characterLevel = 1;
+var characterXP = 0;
+var characterHP = 1;//set equation based on characterLevel
+var characterAttack = 1;//set equation based on characterLevel
+var characterDefence = 1;//set equation based on characterLevel
+var characterMaxHP = 10;
+var characterX = 6;
+var characterY = 6;
+var currentFloor = new Floor();
+var currentRoom = null;
+var currentEvent = null;
+
+//updates character stats on the interface
+function updateCharacterStats(){
+	$('.charName').html(characterName.toString());
+	$('.charLevel').html(characterLevel);
+	$('.charXP').html(characterXP);
+	$('.charHP').html(characterHP);
+}
+function updateMiniMap() { //update minimap based on the room array
+	for(var i = 0; i < 11; ++i){
+		for(var j = 0; j < 11; ++j){
+			if(!(currentFloor['map[i][j]'] == null)){//Room exists
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonRoom.png";
+				if(i < 10 && !(currentFloor['map[i+1][j]'] == null)){//if there is a room south
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else{
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0 && !(currentFloor['map[i-1][j]'] == null)){//if there is a room north
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticle.png";
+				}
+				else{
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10 && !(currentFloor['map[i][j+1]'] == null)){//if there is a room east
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontal.png";
+				}
+				else{
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0 && !(currentFloor['map[i][j-1]'] == null)){//if there is a room west
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontal.png";
+				}
+				else{
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+			}
+			else{
+				document.getElementById("img" + (2*i) + "." + (2*j)).src="dungeonEmpty.png";
+				if(i < 10){
+					document.getElementById("img" + ((2*i) + 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if( i > 0){
+					document.getElementById("img" + ((2*i) - 1) +"."+ (2*j)).src="dungeonVerticleEmpty.png";
+				}
+				if(j < 10){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) + 1)).src="dungeonHorizontalEmpty.png";
+				}
+				if(j > 0){
+					document.getElementById("img" + (2*i) +"."+ ((2*j) - 1)).src="dungeonHorizontalEmpty.png";
+				}
+
+			}
+		}
+	}
+}
+//Entity constructor
+function Entity(entityName, entityLevel){
+	var name;
+	var level;
+	this.name = "";
+	if(entityName == null){
+		var numMonsterNames = monsterNameArray.length;
+		var indexOffset = 1 / numMonsterNames;
+		var index = 0;
+		var randomMonsterNum = Math.random();
+		while(randomMonsterNum > indexOffset){
+			randomMonsterNum = randomMonsterNum - indexOffset;
+			++index;
+		}
+		this.name=monsterNameArray[index];
+	}
+	else{
+		this.name=entityName;
+	}
+	this.level = entityLevel - 1 + Math.round(2 * Math.random());
+	this.HP = this.level + Math.round(.5 * this.level) + Math.round(2 * this.level * Math.random());
+	this.attack = this.level + Math.round(.25 * this.level) + Math.round(4 * this.level * Math.random());
+	this.defence = this.level + Math.round(.25 * this.level) + Math.round(4 * this.level * Math.random());
+	
+	//print entity info (This will need an if/else for character stat location)
+	this.printInfo = function(){
+		$("#enemyList").append("Name: " + this.name + "Level: " + this.level + " HP: " + this.HP + " Attack: " + this.attack + " Defence: " + this.defence + "<br>");
+	}
+}
+
+//This is a class to create an event
+function createEvent(){
+	new EventEncounter(4);
+	$('#buttonR1C1').text("Attack");
+	$('#buttonR1C2').text("Inventory");
+	$('#buttonR1C3').text("Retreat");
+
+	$('#buttonR1C4').hide();
+	$('#buttonR2C1').hide();
+	$('#buttonR2C2').hide();
+	$('#buttonR2C3').hide();
+	$('#buttonR2C4').hide();
+	$('#buttonR3C2').hide();
+	$('#buttonR3C4').hide();
+	
+}
+
+//This is a class to control movement
+function moveControl() {
+	$('#buttonR1C1').text("Create Event");
+	//Movement
+	$('#buttonR1C2').text("Up");
+	$('#buttonR3C2').text("Down");
+	$('#buttonR2C1').text("Left");
+	$('#buttonR2C3').text("Right");
+
+	for (i = 0; i < moveButtons.length; i++) {
+		$(moveButtons[i]).show();
+	}
+
+	$('#buttonR1C3').text("Inventory");
+	$('#buttonR2C2').text("Interact");
+
+	// Hiding buttons
+	$('#buttonR1C5').hide();
+	$('#buttonR2C5').hide();
+	$('#buttonR3C5').hide();
+	$('#buttonR3C1').hide();
+	$('#buttonR3C3').hide();
+}
+
+//This is the floor constructor
+function Floor(characterLevel){
+	var map = [];
+	for(var i = 0; i < 11; ++i){
+		var row = [];
+		for(var j = 0; j < 11; ++j){
+			row[j] = null;
+		}
+		map[i] = row;
+	}
+
+	var numberRooms = 10;
+	
+}
+
+//This is the room constructor
+function Room(characterLevel){
+	this.event = new EventEncounter(characterLevel);
+}
+
+//This is the encounter event constructor
+function EventEncounter(characterLevel){
+	var numMonsters = 4;
+	var monsterArray = [];
+	for(var i=0; i<numMonsters; ++i){
+		monsterArray.push(new Entity(null, characterLevel));
+	}
+	for(var j=0; j<monsterArray.length; ++j){
+		monsterArray[j].printInfo();
+	}
+}
+
+//Set up minimap area
+var jsMiniMapDiv = document.getElementById("miniMapDiv");
+jsMiniMapDiv.style.fontSize = "0";
+for(var i = 0; i < 21; ++i){
+	var newDiv = document.createElement('div');
+	newDiv.style.display = "inline-block";
+	newDiv.style.fontSize = "0";
+	for(var j = 0; j < 21; ++j){
+		var newSpan = document.createElement('span');
+		newSpan.id = ""+i+"."+j;
+		newSpan.style.display = "inline-block";
+		newSpan.style.fontSize = "0";
+		var img = document.createElement('img');
+		img.id="img"+i+"."+j;
+		if(i%2 == 0 && j%2 == 0){
+			newSpan.style.height = "9px";
+			newSpan.style.width = "11px";
+		}
+		else if(i%2 == 1 && j%2 ==0){
+			newSpan.style.height = "3px";
+			newSpan.style.width = "11px";
+		}
+		else if(i%2 == 0 && j%2 == 1){
+			newSpan.style.height = "9px";
+			newSpan.style.width = "3px";
+		}
+		else if(i%2 == 1 && j%2 == 1){
+			newSpan.style.height = "3px";
+			newSpan.style.width = "3px";
+			newSpan.style.backgroundColor = "#333333"
+		}
+		newSpan.appendChild(img);
+		newDiv.appendChild(newSpan);
+	}
+	jsMiniMapDiv.appendChild(newDiv);
+}
+
+</script>
+</body>
+</html>
